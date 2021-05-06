@@ -10,6 +10,7 @@ from .exceptions import InvalidDataError, ParamsError
 
 from enum import Enum
 
+from typing import Optional
 
 class OrderType(object):
     pass
@@ -102,7 +103,7 @@ class OkAPI(object):
         if obj['code'] == '0':
             return obj['data']
         else:
-            raise Exception("")
+            raise InvalidDataError("")
 
     def market_ticker(self, instId):
         out = self.get('market', 'ticker', {'instId': instId})
@@ -110,15 +111,51 @@ class OkAPI(object):
         if obj['code'] == '0':
             return obj['data']
         else:
-            raise Exception("")
+            raise InvalidDataError("")
+    
+    def candles(self, instId:str, bar:str='1m', after:Optional[str]=None, before:Optional[str]=None, limit:int=100):
+        params = {
+                'instId': instId,
+                'bar': bar,
+                'limit': limit
+            }
+        if after is not None:
+            params['after'] = after
 
-    def history_candles(self, instId):
+        if before is not None:
+            params['before'] = before
+    
+        out = self.get(
+            'market',
+            'candles',
+            params
+        )
+        obj = json.loads(out)
+        if obj['code'] == '0':
+            df = pd.DataFrame(obj['data'], columns=[
+                              "ts", "o", "h", "l", "c", "vol", "volCcy"])
+            df['ts'] = df['ts'].apply(
+                lambda x: datetime.datetime.fromtimestamp(int(x)/1000))
+            return df
+        else:
+            raise InvalidDataError(obj['code'] + ": " + obj['msg'])
+    
+    def history_candles(self, instId:str, bar:str='1m', after:Optional[str]=None, before:Optional[str]=None, limit:int=100):
+        params = {
+                'instId': instId,
+                'bar': bar,
+                'limit': limit
+            }
+        if after is not None:
+            params['after'] = after
+
+        if before is not None:
+            params['before'] = before
+    
         out = self.get(
             'market',
             'history-candles',
-            {
-                'instId': instId
-            }
+            params
         )
         obj = json.loads(out)
         if obj['code'] == '0':
