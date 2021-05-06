@@ -8,6 +8,45 @@ import json
 import pandas as pd
 from .exceptions import InvalidDataError, ParamsError
 
+from enum import Enum
+
+
+class OrderType(object):
+    pass
+
+
+class MarketOrder(OrderType):
+    name = 'market'
+
+    def __init__(self):
+        pass
+
+class LimitOrder(OrderType):
+    name = 'limit'
+
+    def __init__(self, limit_price):
+        self.limit_price = limit_price
+    
+class PostOnlyOrder(OrderType):
+    name = 'post_only'
+
+    def __init__(self):
+        pass
+
+
+class FokOrder(OrderType):
+    name = 'fok'
+
+    def __init__(self):
+        pass
+
+
+class IocOrder(OrderType):
+    name = 'ioc'
+
+    def __init__(self):
+        pass
+
 
 class OkAPI(object):
     domain = "https://www.okex.com"
@@ -19,8 +58,8 @@ class OkAPI(object):
 
     def get_sign(self, timestamp, method, requestPath, body=''):
         content = timestamp + method + requestPath + body
-        b64 = base64.b64encode(hmac.new(self.secret_key.encode(
-        ), content.encode(), digestmod=sha256).digest()).decode()
+        sha256_bytes = hmac.new(self.secret_key.encode(), content.encode(), digestmod=sha256).digest()
+        b64 = base64.b64encode(sha256_bytes).decode()
         return b64
 
     def get_timestamp(self):
@@ -83,13 +122,22 @@ class OkAPI(object):
         )
         obj = json.loads(out)
         if obj['code'] == '0':
-            df = pd.DataFrame(obj['data'], columns=["ts", "o", "h", "l", "c", "vol", "volCcy"])
-            df['ts'] = df['ts'].apply(lambda x: datetime.datetime.fromtimestamp(int(x)/1000))
+            df = pd.DataFrame(obj['data'], columns=[
+                              "ts", "o", "h", "l", "c", "vol", "volCcy"])
+            df['ts'] = df['ts'].apply(
+                lambda x: datetime.datetime.fromtimestamp(int(x)/1000))
             return df
         else:
             raise InvalidDataError(obj['code'] + ": " + obj['msg'])
 
-    def order(self, instId, tdMode, side, ordType, sz):
+    def order(self, instId, sz: float, posSide: str = 'long', ordType: OrderType = None, tdMode: str = 'cash'):
+
+        if not isinstance(ordType, OrderType):
+            raise ParamsError("ordType必须是OrderType类型")
+        if sz >= 0:
+            side = 'buy'
+        else:
+            side = 'sell'
         out = self.post(
             'trade',
             'order',
@@ -97,7 +145,7 @@ class OkAPI(object):
                 'instId': instId,
                 'tdMode': tdMode,
                 'side': side,
-                'ordType': ordType,
+                'ordType': ordType.name,
                 'sz': str(sz)
             }
         )
