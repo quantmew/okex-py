@@ -6,10 +6,12 @@ import requests
 import datetime
 import json
 import pandas as pd
-from .exceptions import InvalidDataError
+from .exceptions import InvalidDataError, ParamsError
+
 
 class OkAPI(object):
     domain = "https://www.okex.com"
+
     def __init__(self, key, secret_key, passphrase):
         self.key = key
         self.secret_key = secret_key
@@ -17,7 +19,8 @@ class OkAPI(object):
 
     def get_sign(self, timestamp, method, requestPath, body=''):
         content = timestamp + method + requestPath + body
-        b64 = base64.b64encode(hmac.new(self.secret_key.encode(), content.encode(), digestmod=sha256).digest()).decode()
+        b64 = base64.b64encode(hmac.new(self.secret_key.encode(
+        ), content.encode(), digestmod=sha256).digest()).decode()
         return b64
 
     def get_timestamp(self):
@@ -36,9 +39,22 @@ class OkAPI(object):
     def get(self, category, method, params=None):
         url = "/api/v5/" + category + "/" + method
         if params is None:
-            out = requests.get(self.domain + url, headers=self.get_header("GET", url))
+            out = requests.get(self.domain + url,
+                               headers=self.get_header("GET", url))
         else:
-            out = requests.get(self.domain + url, params=params, headers=self.get_header("GET", url))
+            out = requests.get(self.domain + url, params=params,
+                               headers=self.get_header("GET", url))
+        return out.text
+
+    def post(self, category, method, params=None):
+        body = json.dumps(params)
+        url = "/api/v5/" + category + "/" + method
+        headers = self.get_header("POST", url, body)
+        headers['Content-Type'] = 'application/json'
+        if params is None:
+            out = requests.post(self.domain + url, headers=headers)
+        else:
+            out = requests.post(self.domain + url, data=body, headers=headers)
         return out.text
 
     def account_position_risk(self):
@@ -57,7 +73,6 @@ class OkAPI(object):
         else:
             raise Exception("")
 
-    
     def history_candles(self, instId):
         out = self.get(
             'market',
@@ -65,11 +80,30 @@ class OkAPI(object):
             {
                 'instId': instId
             }
-            )
+        )
         obj = json.loads(out)
         if obj['code'] == '0':
-            df = pd.DataFrame(obj['data'], columns = ["ts", "o", "h", "l", "c", "vol", "volCcy"])
+            df = pd.DataFrame(obj['data'], columns=["ts", "o", "h", "l", "c", "vol", "volCcy"])
             df['ts'] = df['ts'].apply(lambda x: datetime.datetime.fromtimestamp(int(x)/1000))
             return df
         else:
-            raise InvalidDataError("Invalid status code: " + obj['code'] + ". Message: " + obj['msg'])
+            raise InvalidDataError(obj['code'] + ": " + obj['msg'])
+
+    def order(self, instId, tdMode, side, ordType, sz):
+        out = self.post(
+            'trade',
+            'order',
+            {
+                'instId': instId,
+                'tdMode': tdMode,
+                'side': side,
+                'ordType': ordType,
+                'sz': str(sz)
+            }
+        )
+        obj = json.loads(out)
+        print(obj)
+        if obj['code'] == '0':
+            return obj['data']
+        else:
+            raise InvalidDataError(obj['code'] + ": " + obj['msg'])

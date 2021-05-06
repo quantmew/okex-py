@@ -12,7 +12,7 @@ class UserCodeError(Exception):
 
 
 class InternalError(Exception):
-    # qmdata内部的异常
+    # 内部的异常
     pass
 
 
