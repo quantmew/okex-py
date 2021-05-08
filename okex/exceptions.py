@@ -1,51 +1,44 @@
-#!/usr/bin/env python
-#coding:utf-8
+# coding=utf-8
+import json
 
-"""
-将用户code导致的异常和系统内部异常使用两个异常基类区分（UserCodeError，InternalError）
-"""
+class OkexAPIException(Exception):
 
+    def __init__(self, response):
+        print(response.text + ', ' + str(response.status_code))
+        self.code = 0
+        try:
+            json_res = response.json()
+        except ValueError:
+            self.message = 'Invalid JSON error message from Okex: {}'.format(response.text)
+        else:
+            if "error_code" in json_res.keys() and "error_message" in json_res.keys():
+                self.code = json_res['error_code']
+                self.message = json_res['error_message']
+            else:
+                self.code = 'None'
+                self.message = 'System error'
 
-class UserCodeError(Exception):
-    # 用户代码导致的相关异常
-    pass
+        self.status_code = response.status_code
+        self.response = response
+        self.request = getattr(response, 'request', None)
 
-
-class InternalError(Exception):
-    # 内部的异常
-    pass
-
-
-class ParamsError(UserCodeError):
-    # 用户传入的api参数不合理
-    pass
-
-
-class SecurityNotExist(UserCodeError):
-    # 用户尝试使用标的列表中不存在的标的
-    pass
-
-
-class MissDataError(InternalError):
-    # 数据缺失导致的异常
-    pass
+    def __str__(self):  # pragma: no cover
+        return 'API Request Error(error_code=%s): %s' % (self.code, self.message)
 
 
-class InitObjError(InternalError):
-    # 常用于初始化对象时由于内部错误（比如数据错误）抛出的异常
-    pass
+class OkexRequestException(Exception):
+
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self):
+        return 'OkexRequestException: %s' % self.message
 
 
-class InvalidDataError(InternalError):
-    # 数据不正常抛出的异常（比如复权因子小于0）
-    pass
+class OkexParamsException(Exception):
 
+    def __init__(self, message):
+        self.message = message
 
-class TimeoutError(InternalError):
-    # 超时时触发的异常
-    pass
-
-
-class FutureDataError(UserCodeError):
-    # 用户取未来数据时的异常
-    pass
+    def __str__(self):
+        return 'OkexParamsException: %s' % self.message
