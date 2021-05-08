@@ -12,6 +12,25 @@ from enum import Enum
 
 from typing import Optional
 
+
+class InstType(Enum):
+    # 币币
+    SPOT = "SPOT"
+    # 永续合约
+    SWAP = "SWAP"
+    # 交割合约
+    FUTURES = "FUTURES"
+    # 期权
+    OPTION = "OPTION"
+
+'''
+指数计价单位
+'''
+class QuoteCcy(Enum):
+    USD = "USD"
+    USDT = "USDT"
+    BTC = "BTC"
+
 class OrderType(object):
     pass
 
@@ -105,13 +124,27 @@ class OkAPI(object):
         else:
             raise InvalidDataError("")
 
-    def market_ticker(self, instId):
+    def ticker(self, instId: str):
         out = self.get('market', 'ticker', {'instId': instId})
         obj = json.loads(out)
         if obj['code'] == '0':
             return obj['data']
         else:
             raise InvalidDataError("")
+
+    def tickers(self, instType: InstType, uly: Optional[str]=None):
+        params = {'instType': str(instType)}
+        if uly is not None:
+            params['uly'] = uly
+        out = self.get('market', 'tickers', params)
+        obj = json.loads(out)
+        if obj['code'] == '0':
+            return obj['data']
+        else:
+            raise InvalidDataError("")
+
+    def index_tickers(self, quoteCcy: Optional[QuoteCcy]=None, instId: Optional[str]=None):
+        pass
     
     def candles(self, instId:str, bar:str='1m', after:Optional[str]=None, before:Optional[str]=None, limit:int=100):
         params = {
@@ -172,8 +205,10 @@ class OkAPI(object):
         if not isinstance(ordType, OrderType):
             raise ParamsError("ordType必须是OrderType类型")
         if sz >= 0:
+            order_size = sz
             side = 'buy'
         else:
+            order_size = abs(sz)
             side = 'sell'
         out = self.post(
             'trade',
@@ -183,7 +218,7 @@ class OkAPI(object):
                 'tdMode': tdMode,
                 'side': side,
                 'ordType': ordType.name,
-                'sz': str(sz)
+                'sz': str(order_size)
             }
         )
         obj = json.loads(out)
