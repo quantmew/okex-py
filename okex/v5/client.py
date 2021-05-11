@@ -32,7 +32,12 @@ class Client(object):
             # 获取服务器时间
             timestamp = self._get_timestamp()
 
-        body = json.dumps(params) if method == c.POST else ""
+        if isinstance(params, str):
+            body = params if method == c.POST else ""
+        elif isinstance(params, dict):
+            body = json.dumps(params) if method == c.POST else ""
+        else:
+            body = json.dumps(params) if method == c.POST else ""
         sign = utils.sign(utils.pre_hash(timestamp, method, request_path, str(body)), self.API_SECRET_KEY)
         header = utils.get_header(self.API_KEY, sign, timestamp, self.PASSPHRASE)
 

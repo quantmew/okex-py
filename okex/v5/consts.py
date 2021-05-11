@@ -34,3 +34,6 @@ INDEX_TICKERS = '/api/v5/market/index-tickers'
 BOOKS = '/api/v5/market/books'
 CANDLES = '/api/v5/market/candles'
 HISTORY_CANDLES = '/api/v5/market/history-candles'
+
+# trade
+ORDER = '/api/v5/trade/order'

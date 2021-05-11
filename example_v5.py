@@ -6,6 +6,7 @@ Here is the okex api example.
 
 import okex.v5.account_api as account
 import okex.v5.market_api as market
+import okex.v5.trade_api as trade
 import json
 import datetime
 
@@ -73,4 +74,14 @@ if __name__ == '__main__':
     print(result)
     # 获取交易产品历史K线数据
     result = marketAPI.history_candles(instId='BTC-USD-SWAP')
+    # print(result)
+
+    # trade
+    from okex.v5.trade_api import TdMode, OrderType
+    tradeAPI = trade.TradeAPI(api_key, secret_key, passphrase, False)
+    # 卖出SHIB试试
+    # result = tradeAPI.order('SHIB-USDT', TdMode.CASH, OrderType.MARKET, -1000000)
+    # print(result)
+    # 打印订单信息
+    # result = tradeAPI.get_order(instId='SHIB-USDT')
     # print(result)
