@@ -33,7 +33,7 @@ class AccountAPI(Client):
         params = {}
         if ccyType is not None:
             params['ccyType'] = enum_to_str(ccyType)
-        return self._request_with_params(GET, BALANCE, params)
+        return self._request_with_params(GET, BALANCE, params)['data']
 
     # get specific currency info
     def positions(self, instType: Optional[Union[InstType, str]] = None, instId: Optional[str] = None, posId: Optional[Union[str, Iterable]] = None):
@@ -50,8 +50,7 @@ class AccountAPI(Client):
                 params['instId'] = iterable_to_str(posIdList)
         
         data = self._request_with_params(GET, POSITIONS, params)['data']
-        df = pd.DataFrame(data)
-        return df
+        return data
 
     def bills(self, instType: Optional[Union[InstType, str]] = None,
                         ccyType: Optional[Union[InstType, str]] = None,
