@@ -19,7 +19,7 @@ class AccountAPI(Client):
         Client.__init__(self, api_key, api_secret_key, passphrase, use_server_time, test, first)
 
     # get account position risk
-    def get_position_risk(self, instType: Optional[Union[InstType, str]] = None):
+    def position_risk(self, instType: Optional[Union[InstType, str]] = None):
         params = {}
         if instType is not None:
             params['instType'] = enum_to_str(instType)
@@ -29,14 +29,14 @@ class AccountAPI(Client):
         return data
 
     # get balance
-    def get_balance(self, ccyType: Optional[Union[CcyType, str]] = None):
+    def balance(self, ccyType: Optional[Union[CcyType, str]] = None):
         params = {}
         if ccyType is not None:
             params['ccyType'] = enum_to_str(ccyType)
         return self._request_with_params(GET, BALANCE, params)
 
     # get specific currency info
-    def get_positions(self, instType: Optional[Union[InstType, str]] = None, instId: Optional[str] = None, posId: Optional[Union[str, Iterable]] = None):
+    def positions(self, instType: Optional[Union[InstType, str]] = None, instId: Optional[str] = None, posId: Optional[Union[str, Iterable]] = None):
         params = {}
         if instType is not None:
             params['instType'] = enum_to_str(instType)
@@ -53,7 +53,7 @@ class AccountAPI(Client):
         df = pd.DataFrame(data)
         return df
 
-    def get_bills(self, instType: Optional[Union[InstType, str]] = None,
+    def bills(self, instType: Optional[Union[InstType, str]] = None,
                         ccyType: Optional[Union[InstType, str]] = None,
                         mgnMode: Optional[Union[MgnMode, str]] = None,
                         ctType: Optional[Union[CtType, str]] = None,
@@ -91,7 +91,7 @@ class AccountAPI(Client):
         
         return df
 
-    def get_bills_archive(self, instType: Optional[Union[InstType, str]] = None,
+    def bills_archive(self, instType: Optional[Union[InstType, str]] = None,
                         ccyType: Optional[Union[InstType, str]] = None,
                         mgnMode: Optional[Union[MgnMode, str]] = None,
                         ctType: Optional[Union[CtType, str]] = None,
@@ -129,6 +129,6 @@ class AccountAPI(Client):
         
         return df
 
-    def get_config(self):
+    def config(self):
         data = self._request_without_params(GET, CONFIG)['data']
         return data

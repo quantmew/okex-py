@@ -6,12 +6,15 @@ OKEx Cryptocurrency Exchange python SDK (Unofficial)
 
 ## 使用例子 Example
 ``` python3
-from okex import OkAPI
-api = OkAPI(key, secret_key, passphrase)
-candles = api.candles('ETH-USDT')
-# print ETH current data
-print(candles)
+import okex.v5.account_api as account
+import okex.v5.market_api as market
+result = accountAPI.get_positions()
+# print my positions
+print(result)
 ```
+
+## API文档
+施工中
 
 ## 安装 Installation
 

@@ -33,25 +33,25 @@ if __name__ == '__main__':
     accountAPI = account.AccountAPI(api_key, secret_key, passphrase, False)
     # 查看账户持仓风险
     from okex.v5.insttype import InstType
-    result = accountAPI.get_position_risk(instType=InstType.MARGIN)
+    result = accountAPI.position_risk(instType=InstType.MARGIN)
     # print(result)
 
     # 查看账户余额
     from okex.v5.ccytype import CcyType
-    result = accountAPI.get_balance(ccyType=CcyType.BTC)
+    result = accountAPI.balance(ccyType=CcyType.BTC)
     # print(result)
 
     # 查看持仓信息
     from okex.v5.insttype import InstType
-    result = accountAPI.get_positions()
+    result = accountAPI.positions()
     # print(result)
 
     # 账单流水查询（近七天）
-    result = accountAPI.get_bills()
+    result = accountAPI.bills()
     # print(result)
 
     # 账单流水查询（近三个月）
-    result = accountAPI.get_bills_archive()
+    result = accountAPI.bills_archive()
     # print(result)
 
     # market
