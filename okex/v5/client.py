@@ -1,5 +1,6 @@
 import requests
 import json
+import logging
 
 from . import consts as c
 from . import utils
@@ -41,9 +42,9 @@ class Client(object):
             print("url:", url)
             self.first = False
 
-        print("url:", url)
+        logging.debug("url:", url)
         # print("headers:", header)
-        print("body:", body)
+        logging.debug("body:", body)
 
         # send request
         response = None

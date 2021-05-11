@@ -58,4 +58,19 @@ if __name__ == '__main__':
     marketAPI = market.MarketAPI(api_key, secret_key, passphrase, False)
     # 获取所有产品行情信息
     result = marketAPI.tickers(InstType.SWAP)
+    # print(result)
+    # 获取单个产品行情信息
+    result = marketAPI.ticker('BTC-USD-SWAP')
+    # print(result)
+    # 获取指数行情
+    result = marketAPI.tickers(InstType.SWAP)
+    # print(result)
+    # 获取产品深度
+    result = marketAPI.books('BTC-USD-SWAP')
+    # print(result)
+    # 获取所有交易产品K线数据
+    result = marketAPI.candles(instId='BTC-USD-SWAP')
     print(result)
+    # 获取交易产品历史K线数据
+    result = marketAPI.history_candles(instId='BTC-USD-SWAP')
+    # print(result)
