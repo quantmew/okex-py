@@ -128,3 +128,7 @@ class AccountAPI(Client):
                             "instId", "ordId", "from", "to", "notes"])
         
         return df
+
+    def get_config(self):
+        data = self._request_without_params(GET, CONFIG)['data']
+        return data

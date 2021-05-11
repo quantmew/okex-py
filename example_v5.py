@@ -4,15 +4,8 @@ Here is the okex api example.
 
 '''
 
-import okex.account_api as account
-import okex.futures_api as future
-import okex.lever_api as lever
-import okex.spot_api as spot
-import okex.swap_api as swap
-import okex.index_api as index
-import okex.option_api as option
-import okex.system_api as system
-import okex.information_api as information
+import okex.v5.account_api as account
+import okex.v5.market_api as market
 import json
 import datetime
 
@@ -60,3 +53,9 @@ if __name__ == '__main__':
     # 账单流水查询（近三个月）
     result = accountAPI.get_bills_archive()
     # print(result)
+
+    # market
+    marketAPI = market.MarketAPI(api_key, secret_key, passphrase, False)
+    # 获取所有产品行情信息
+    result = marketAPI.tickers(InstType.SWAP)
+    print(result)

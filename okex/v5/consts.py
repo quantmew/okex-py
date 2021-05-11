@@ -24,3 +24,10 @@ BALANCE = '/api/v5/account/balance'
 POSITIONS = '/api/v5/account/positions'
 BILLS = '/api/v5/account/bills'
 BILLS_ARCHIVE = '/api/v5/account/bills-archive'
+CONFIG = '/api/v5/account/config'
+
+
+# market
+TICKERS = '/api/v5/market/tickers'
+TICKER = '/api/v5/market/ticker'
+INDEX_TICKERS = '/api/v5/market/index-tickers'
