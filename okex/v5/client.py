@@ -47,9 +47,9 @@ class Client(object):
             print("url:", url)
             self.first = False
 
-        logging.debug("url:", url)
+        logging.debug("url: " + url)
         # print("headers:", header)
-        logging.debug("body:", body)
+        logging.debug("body: " + body)
 
         # send request
         response = None
