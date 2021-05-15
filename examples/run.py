@@ -8,6 +8,7 @@ import json
 import datetime
 import time
 import traceback
+import tqdm
 
 import numpy as np
 import requests
@@ -16,6 +17,10 @@ from tenacity import retry, stop_after_attempt
 import backtrader as bt
 import backtrader.feeds as btfeeds
 import pandas as pd
+
+from bt_turtle import TurtleStrategy
+from bt_test import TestStrategy
+
 
 
 if __name__ == '__main__':
@@ -34,9 +39,18 @@ if __name__ == '__main__':
     # env
     cerebro = bt.Cerebro()
 
-    # Create a Data Feed
+    # Add a strategy
+    cerebro.addstrategy(TurtleStrategy)
 
-    dataframe = marketAPI.candles('ETH-USDT')
+    # Create a Data Feed
+    now_ts = int(round(time.time() * 1000))
+    dataframe = marketAPI.history_candles('ETH-USDT', after=now_ts, limit=100)
+    for i in tqdm.tqdm(range(10)):
+        now_ts -= 100 * 60 * 1000
+        df = marketAPI.history_candles('ETH-USDT', after=now_ts, limit=100)
+        # print(df)
+        dataframe = dataframe.append(df)
+
     dataframe = dataframe.rename(
         columns={
             'ts':'datetime',
@@ -45,6 +59,7 @@ if __name__ == '__main__':
             'l': 'low',
             'c': 'close',
             'vol': 'volume'})
+    dataframe = dataframe.sort_values(by=['datetime'],na_position='first')
     dataframe = dataframe.set_index("datetime", drop=True)
     dataframe = dataframe.drop(columns=['volCcy'])
     dataframe = dataframe.replace([np.inf, -np.inf], np.nan).dropna()
