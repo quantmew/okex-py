@@ -15,13 +15,22 @@ import requests
 from tenacity import retry, stop_after_attempt
 
 import backtrader as bt
+import backtrader.analyzers as btanalyzers
 import backtrader.feeds as btfeeds
+import backtrader.strategies as btstrats
 import pandas as pd
 
 from bt_turtle import TurtleStrategy
 from bt_test import TestStrategy
+from bt_ssa import SSAStrategy
+from bt_ketler import KetlerStrategy
+from bt_pivot import PivotStrategy
+from bt_price_momentum import PriceMomentumStrategy
+from bt_two_sma import TwoSmaStrategy
 
-
+@retry
+def history_candles(marketAPI, code, after, limit):
+    return marketAPI.history_candles(code, after=after, limit=limit)
 
 if __name__ == '__main__':
 
@@ -44,10 +53,10 @@ if __name__ == '__main__':
 
     # Create a Data Feed
     now_ts = int(round(time.time() * 1000))
-    dataframe = marketAPI.history_candles('ETH-USDT', after=now_ts, limit=100)
-    for i in tqdm.tqdm(range(10)):
+    dataframe = history_candles(marketAPI, 'ETH-USDT', after=now_ts, limit=100)
+    for i in tqdm.tqdm(range(5)):
         now_ts -= 100 * 60 * 1000
-        df = marketAPI.history_candles('ETH-USDT', after=now_ts, limit=100)
+        df = history_candles(marketAPI, 'ETH-USDT', after=now_ts, limit=100)
         # print(df)
         dataframe = dataframe.append(df)
 
@@ -69,12 +78,19 @@ if __name__ == '__main__':
     # Add the Data Feed to Cerebro
     cerebro.adddata(data)
 
-
     cerebro.broker.setcash(100000.0)
     print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
 
-    cerebro.run()
+    # Analyzer
+    cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='sharpe')
+    cerebro.addanalyzer(btanalyzers.DrawDown, _name='drawdown')
 
+    thestrats = cerebro.run()
+
+    thestrat = thestrats[0]
+
+    print('Sharpe Ratio:', thestrat.analyzers.sharpe.get_analysis())
+    print('Draw down:', thestrat.analyzers.drawdown.get_analysis())
     print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
 
     # Plot the result
