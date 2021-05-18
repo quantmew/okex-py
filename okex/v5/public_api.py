@@ -28,7 +28,6 @@ class PublicAPI(Client):
 
         df = pd.DataFrame(data)
         df = df.apply(pd.to_numeric, errors='ignore')
-        df['ts'] = df['ts'].apply(lambda x: datetime.datetime.fromtimestamp(int(x)/1000))
         return df
 
     def delivery_exercise_history(self, instType:Union[InstType, str],
@@ -36,4 +35,13 @@ class PublicAPI(Client):
             after: Optional[Union[int, str]]=None,
             before: Optional[Union[int, str]]=None, 
             limit: Optional[Union[int, str]]=None):
+        pass
+
+    def open_interest(self,
+            instType:Union[InstType, str],
+            uly: Optional[str],
+            instId: Optional[str]):
+        pass
+
+    def funding_rate(self, instId:str):
         pass
