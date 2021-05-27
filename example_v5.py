@@ -33,7 +33,6 @@ if __name__ == '__main__':
     # account api test
     # 资金账户API
     accountAPI = account.AccountAPI(api_key, secret_key, passphrase, False, test=test)
-    accountAPI.set_api_url("https://www.okex.win")
     # 查看账户持仓风险
     from okex.v5.insttype import InstType
     result = accountAPI.position_risk(instType=InstType.MARGIN)
