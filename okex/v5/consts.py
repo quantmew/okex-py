@@ -37,3 +37,6 @@ HISTORY_CANDLES = '/api/v5/market/history-candles'
 
 # trade
 ORDER = '/api/v5/trade/order'
+BATCH_ORDERS = '/api/v5/trade/batch-orders'
+CANCEL_ORDER = '/api/v5/trade/cancel-order'
+CANCEL_BATCH_ORDERS = '/api/v5/trade/cancel-batch-orders'
