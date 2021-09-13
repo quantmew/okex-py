@@ -1,0 +1,6 @@
+pandas==1.2.2
+tenacity==7.0.0
+backtrader==1.9.76.123
+numpy==1.20.1
+tqdm==4.58.0
+requests==2.25.1
