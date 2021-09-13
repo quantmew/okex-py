@@ -6,6 +6,7 @@ from . import consts as c
 from . import utils
 from .. import exceptions
 
+from typing import Dict, Optional
 
 class Client(object):
 
@@ -17,12 +18,14 @@ class Client(object):
         self.use_server_time = use_server_time
         self.first = first
         self.test = test
+        self.api_url = c.API_URL
+        self.proxy = None
 
     def _request(self, method, request_path, params, cursor=False):
         if method == c.GET:
             request_path = request_path + utils.parse_params_to_str(params)
         # url
-        url = c.API_URL + request_path
+        url = self.api_url + request_path
 
         # 获取本地时间
         timestamp = utils.get_timestamp()
@@ -54,11 +57,20 @@ class Client(object):
         # send request
         response = None
         if method == c.GET:
-            response = requests.get(url, headers=header)
+            if self.proxy is None:
+                response = requests.get(url, headers=header)
+            else:
+                response = requests.get(url, headers=header, proxies=proxy)
         elif method == c.POST:
-            response = requests.post(url, data=body, headers=header)
+            if self.proxy is None:
+                response = requests.post(url, data=body, headers=header)
+            else:
+                response = requests.post(url, data=body, headers=header, proxies=proxy)
         elif method == c.DELETE:
-            response = requests.delete(url, headers=header)
+            if self.proxy is None:
+                response = requests.delete(url, headers=header)
+            else:
+                response = requests.delete(url, headers=header, proxies=proxy)
 
         # exception handle
         if not str(response.status_code).startswith('2'):
@@ -86,9 +98,18 @@ class Client(object):
         return self._request(method, request_path, params, cursor)
 
     def _get_timestamp(self):
-        url = c.API_URL + c.SERVER_TIMESTAMP_URL
-        response = requests.get(url)
+        url = self.api_url + c.SERVER_TIMESTAMP_URL
+        if self.proxy is None:
+            response = requests.get(url)
+        else:
+            response = requests.get(url, proxies=proxy)
         if response.status_code == 200:
             return response.json()['iso']
         else:
             return ""
+
+    def set_api_url(self, url: str):
+        self.api_url = url
+
+    def set_proxy(self, proxy: Optional[Dict]):
+        self.proxy = proxy

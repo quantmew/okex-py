@@ -6,6 +6,7 @@ Here is the okex api example.
 
 import okex.v5.account_api as account
 import okex.v5.market_api as market
+import okex.v5.public_api as public
 import okex.v5.trade_api as trade
 import json
 import datetime
@@ -28,35 +29,32 @@ if __name__ == '__main__':
 
     # param use_server_time's value is False if is True will use server timestamp
     # param test's value is False if is True will use simulative trading
-
+    test = True
     # account api test
     # 资金账户API
-    accountAPI = account.AccountAPI(api_key, secret_key, passphrase, False)
+    accountAPI = account.AccountAPI(api_key, secret_key, passphrase, False, test=test)
     # 查看账户持仓风险
     from okex.v5.insttype import InstType
     result = accountAPI.position_risk(instType=InstType.MARGIN)
     # print(result)
-
     # 查看账户余额
     from okex.v5.ccytype import CcyType
     result = accountAPI.balance(ccyType=CcyType.BTC)
     # print(result)
-
     # 查看持仓信息
     from okex.v5.insttype import InstType
     result = accountAPI.positions()
     # print(result)
-
     # 账单流水查询（近七天）
     result = accountAPI.bills()
     # print(result)
-
     # 账单流水查询（近三个月）
     result = accountAPI.bills_archive()
     # print(result)
 
     # market
-    marketAPI = market.MarketAPI(api_key, secret_key, passphrase, False)
+    marketAPI = market.MarketAPI(api_key, secret_key, passphrase, False, test=test)
+    marketAPI.set_api_url("https://www.okex.win")
     # 获取所有产品行情信息
     result = marketAPI.tickers(InstType.SWAP)
     # print(result)
@@ -76,9 +74,16 @@ if __name__ == '__main__':
     result = marketAPI.history_candles(instId='BTC-USD-SWAP')
     # print(result)
 
+    # public
+    publicAPI = public.PublicAPI(api_key, secret_key, passphrase, False, test=test)
+    publicAPI.set_api_url("https://www.okex.win")
+    result = publicAPI.instruments(InstType.SWAP)
+    print(result)
+
     # trade
     from okex.v5.trade_api import TdMode, OrderType
-    tradeAPI = trade.TradeAPI(api_key, secret_key, passphrase, False)
+    tradeAPI = trade.TradeAPI(api_key, secret_key, passphrase, False, test=test)
+    tradeAPI.set_api_url("https://www.okex.win")
     # 卖出SHIB试试
     # result = tradeAPI.order('SHIB-USDT', TdMode.CASH, OrderType.MARKET, -1000000)
     # print(result)

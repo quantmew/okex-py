@@ -1,12 +1,12 @@
-import okex.account_api as account
-import okex.futures_api as future
-import okex.lever_api as lever
-import okex.spot_api as spot
-import okex.swap_api as swap
-import okex.index_api as index
-import okex.option_api as option
-import okex.system_api as system
-import okex.information_api as information
+import okex.v3.account_api as account
+import okex.v3.futures_api as future
+import okex.v3.lever_api as lever
+import okex.v3.spot_api as spot
+import okex.v3.swap_api as swap
+import okex.v3.index_api as index
+import okex.v3.option_api as option
+import okex.v3.system_api as system
+import okex.v3.information_api as information
 import json
 import datetime
 

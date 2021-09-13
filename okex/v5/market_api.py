@@ -16,7 +16,7 @@ class MarketAPI(Client):
     def __init__(self, api_key, api_secret_key, passphrase, use_server_time=False, test=False, first=False):
         Client.__init__(self, api_key, api_secret_key, passphrase, use_server_time, test, first)
 
-    def tickers(self, instType: InstType, uly: Union[str]=None):
+    def tickers(self, instType: InstType, uly: Optional[str]=None):
         params = {}
         if instType is not None:
             params['instType'] = enum_to_str(instType)

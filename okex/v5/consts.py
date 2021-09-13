@@ -27,6 +27,11 @@ BILLS_ARCHIVE = '/api/v5/account/bills-archive'
 CONFIG = '/api/v5/account/config'
 
 
+# asset
+DEPOSIT_ADDRESS = '/api/v5/asset/deposit-address'
+BALANCES = '/api/v5/asset/balances'
+
+
 # market
 TICKERS = '/api/v5/market/tickers'
 TICKER = '/api/v5/market/ticker'
@@ -34,6 +39,10 @@ INDEX_TICKERS = '/api/v5/market/index-tickers'
 BOOKS = '/api/v5/market/books'
 CANDLES = '/api/v5/market/candles'
 HISTORY_CANDLES = '/api/v5/market/history-candles'
+
+# public
+INSTRUMENTS = '/api/v5/public/instruments'
+
 
 # trade
 ORDER = '/api/v5/trade/order'

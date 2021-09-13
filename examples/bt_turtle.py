@@ -53,7 +53,7 @@ class TurtleStrategy(bt.Strategy):
         crossover_lo: 是否穿过下线
     """
 
-    params = (('hi_period', 60), ('lo_period', 30), ('atr_period', 14))
+    params = (('hi_period', 20), ('lo_period', 10), ('atr_period', 14))
 
     def __init__(self):
         self.order = None
@@ -121,10 +121,10 @@ class TurtleStrategy(bt.Strategy):
             self.order = self.buy()
             self.buy_time = self.buy_time + 1
         #出场
-        elif self.crossover_lo < 0 and self.buy_time > 0:
+        elif self.buy_time >= 1 and self.crossover_lo < 0 and self.buy_time > 0:
             self.order = self.sell()
             self.buy_time = 0
         #止损
-        elif self.datas[0].close < (self.buy_price - 2 * self.ATR[0]) and self.buy_time > 0:
+        elif self.buy_time >= 1 and self.datas[0].close < (self.buy_price - 2 * self.ATR[0]) and self.buy_time > 0:
             self.order = self.sell()
             self.buy_time = 0
