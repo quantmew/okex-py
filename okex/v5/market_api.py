@@ -16,7 +16,7 @@ class MarketAPI(Client):
     def __init__(self, api_key, api_secret_key, passphrase, use_server_time=False, test=False, first=False):
         Client.__init__(self, api_key, api_secret_key, passphrase, use_server_time, test, first)
 
-    def tickers(self, instType: InstType, uly: Optional[str]=None):
+    def tickers(self, instType: InstType, uly: Optional[str]=None) -> pd.DataFrame:
         params = {}
         if instType is not None:
             params['instType'] = enum_to_str(instType)
@@ -29,7 +29,7 @@ class MarketAPI(Client):
         df['ts'] = df['ts'].apply(lambda x: datetime.datetime.fromtimestamp(int(x)/1000))
         return df
 
-    def ticker(self, instId: str):
+    def ticker(self, instId: str) -> pd.DataFrame:
         params = {}
         if instId is not None:
             params['instId'] = instId
@@ -40,7 +40,7 @@ class MarketAPI(Client):
         df['ts'] = df['ts'].apply(lambda x: datetime.datetime.fromtimestamp(int(x)/1000))
         return df
 
-    def index_tickers(self, quoteCcy: Optional[Union[CcyType, str]]=None, instId: Optional[str]=None):
+    def index_tickers(self, quoteCcy: Optional[Union[CcyType, str]]=None, instId: Optional[str]=None) -> pd.DataFrame:
         params = {}
         if quoteCcy is not None:
             params['quoteCcy'] = enum_to_str(quoteCcy)
@@ -66,7 +66,7 @@ class MarketAPI(Client):
                     after: Optional[Union[int, str]]=None,
                     before: Optional[Union[int, str]]=None,
                     bar: Optional[str]=None,
-                    limit: Optional[Union[int, str]]=None):
+                    limit: Optional[Union[int, str]]=None) -> pd.DataFrame:
         params = {}
         if instId is not None:
             params['instId'] = str(instId)
@@ -90,7 +90,7 @@ class MarketAPI(Client):
                     after: Optional[Union[int, str]]=None,
                     before: Optional[Union[int, str]]=None,
                     bar: Optional[str]=None,
-                    limit: Optional[Union[int, str]]=None):
+                    limit: Optional[Union[int, str]]=None) -> pd.DataFrame:
         params = {}
         if instId is not None:
             params['instId'] = str(instId)
