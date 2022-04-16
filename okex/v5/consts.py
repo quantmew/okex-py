@@ -27,11 +27,9 @@ BILLS_ARCHIVE = '/api/v5/account/bills-archive'
 CONFIG = '/api/v5/account/config'
 SET_POSITION_MODE = '/api/v5/account/set-position-mode'
 
-
 # asset
 DEPOSIT_ADDRESS = '/api/v5/asset/deposit-address'
 BALANCES = '/api/v5/asset/balances'
-
 
 # market
 TICKERS = '/api/v5/market/tickers'
@@ -51,7 +49,13 @@ INDEX_COMPONENTS = '/api/v5/market/index-components'
 # public
 INSTRUMENTS = '/api/v5/public/instruments'
 OPEN_INTEREST = '/api/v5/public/open-interest'
-
+FUNDING_RATE = '/api/v5/public/funding-rate'
+FUNDING_RATE_HISTORY = '/api/v5/public/funding-rate-history'
+PRICE_LIMIT = '/api/v5/public/price-limit'
+OPT_SUMMARY = '/api/v5/public/opt-summary'
+ESTIMATED_PRICE = '/api/v5/public/estimated-price'
+TIME = '/api/v5/public/time'
+MARK_PRICE = '/api/v5/public/mark-price'
 
 # trade
 ORDER = '/api/v5/trade/order'

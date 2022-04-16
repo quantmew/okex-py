@@ -13,10 +13,10 @@ import pandas as pd
 
 class PublicAPI(Client):
 
-    def __init__(self, api_key, api_secret_key, passphrase, use_server_time=False, test=False, first=False):
+    def __init__(self, api_key: str, api_secret_key: str, passphrase: str, use_server_time=False, test=False, first=False):
         Client.__init__(self, api_key, api_secret_key, passphrase, use_server_time, test, first)
 
-    def instruments(self, instType:Union[InstType, str], uly: Optional[str]=None, instId:Optional[str]=None):
+    def instruments(self, instType: Union[InstType, str], uly: Optional[str]=None, instId: Optional[str]=None):
         params = {}
         if instType is not None:
             params['instType'] = enum_to_str(instType)
@@ -30,7 +30,7 @@ class PublicAPI(Client):
         df = df.apply(pd.to_numeric, errors='ignore')
         return df
 
-    def delivery_exercise_history(self, instType:Union[InstType, str],
+    def delivery_exercise_history(self, instType: Union[InstType, str],
             uly: str,
             after: Optional[Union[int, str]]=None,
             before: Optional[Union[int, str]]=None, 
@@ -38,7 +38,7 @@ class PublicAPI(Client):
         pass
 
     def open_interest(self,
-            instType:Union[InstType, str],
+            instType: Union[InstType, str],
             uly: Optional[str]=None,
             instId: Optional[str]=None) -> Dict[str, Any]:
         params = {}
@@ -51,5 +51,33 @@ class PublicAPI(Client):
         data = self._request_with_params(GET, OPEN_INTEREST, params)["data"]
         return data
 
-    def funding_rate(self, instId:str):
-        pass
+    def funding_rate(self, instId: str):
+        params = {}
+        params['instId'] = str(instId)
+        data = self._request_with_params(GET, FUNDING_RATE, params)["data"]
+        return data
+
+    def funding_rate_history(self, instId: str,
+                    before: Optional[Union[int, str]]=None,
+                    after: Optional[Union[int, str]]=None,
+                    limit: Optional[Union[int, str]]=None) -> pd.DataFrame:
+        params = {}
+        params['instId'] = str(instId)
+        if before is not None:
+            params['before'] = str(before)
+        if after is not None:
+            params['after'] = str(after)
+        if limit is not None:
+            params['limit'] = str(limit)
+        data = self._request_with_params(GET, FUNDING_RATE_HISTORY, params)["data"]
+        return data
+
+    def price_limit(self, instId: str) -> Dict[str, Any]:
+        params = {}
+        params['instId'] = str(instId)
+        data = self._request_with_params(GET, PRICE_LIMIT, params)["data"]
+        return data
+
+    def time(self) -> Dict[str, Any]:
+        data = self._request_without_params(GET, TIME)["data"]
+        return data
