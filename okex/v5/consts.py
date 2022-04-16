@@ -50,6 +50,7 @@ INDEX_COMPONENTS = '/api/v5/market/index-components'
 
 # public
 INSTRUMENTS = '/api/v5/public/instruments'
+OPEN_INTEREST = '/api/v5/public/open-interest'
 
 
 # trade

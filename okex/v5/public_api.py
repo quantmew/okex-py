@@ -1,5 +1,5 @@
 import datetime
-from typing import Union, Optional, Iterable
+from typing import Any, Dict, Union, Optional, Iterable
 
 from .client import Client
 from .consts import *
@@ -39,9 +39,17 @@ class PublicAPI(Client):
 
     def open_interest(self,
             instType:Union[InstType, str],
-            uly: Optional[str],
-            instId: Optional[str]):
-        pass
+            uly: Optional[str]=None,
+            instId: Optional[str]=None) -> Dict[str, Any]:
+        params = {}
+        params['instType'] = str(instType)
+        if uly is not None:
+            params['uly'] = str(uly)
+        if instId is not None:
+            params['instId'] = str(instId)
+
+        data = self._request_with_params(GET, OPEN_INTEREST, params)["data"]
+        return data
 
     def funding_rate(self, instId:str):
         pass

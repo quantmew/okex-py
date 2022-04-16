@@ -18,12 +18,12 @@ print(result)
 
 ## 安装 Installation
 
-1. Clone the repository
+1. 克隆本仓库，Clone the repository
 ```
 git clone https://github.com/quantmew/okex-py.git
 ```
 
-2. Install the package
+2. 安装，Install the package
 ```
 cd okex-py
 pip install .

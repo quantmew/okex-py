@@ -28,7 +28,14 @@ time = get_timestamp()
 
 if __name__ == '__main__':
 
-    with open('api.json', 'r', encoding='utf-8') as f:
+    if os.path.exists('api.json'):
+        config_path = 'api.json'
+    elif os.path.exists('examples/api.json'):
+        config_path = 'examples/api.json'
+    elif os.path.exists('../api.json'):
+        config_path = '../api.json'
+
+    with open(config_path, 'r', encoding='utf-8') as f:
         obj = json.loads(f.read())
     api_key = obj['api_key']
     secret_key = obj['secret_key']
@@ -61,7 +68,7 @@ if __name__ == '__main__':
 
     # market
     marketAPI = market.MarketAPI(api_key, secret_key, passphrase, False, test=test)
-    marketAPI.set_api_url("https://www.okex.win")
+    # marketAPI.set_api_url("https://www.okex.win")
     # 获取所有产品行情信息
     result = marketAPI.tickers(InstType.SWAP)
     # print(result)
@@ -76,21 +83,27 @@ if __name__ == '__main__':
     # print(result)
     # 获取所有交易产品K线数据
     result = marketAPI.candles(instId='BTC-USD-SWAP')
-    print(result)
+    # print(result)
     # 获取交易产品历史K线数据
     result = marketAPI.history_candles(instId='BTC-USD-SWAP')
+    # print(result)
+    # 获取指数K线数据
+    result = marketAPI.index_candles(instId='BTC-USDT')
+    # print(result)
+    # 获取指数行情
+    result = marketAPI.index_tickers(instId='BTC-USDT')
     # print(result)
 
     # public
     publicAPI = public.PublicAPI(api_key, secret_key, passphrase, False, test=test)
-    publicAPI.set_api_url("https://www.okex.win")
+    # publicAPI.set_api_url("https://www.okex.win")
     result = publicAPI.instruments(InstType.SWAP)
-    print(result)
+    # print(result)
 
     # trade
     from okex.v5.trade_api import TdMode, OrderType
     tradeAPI = trade.TradeAPI(api_key, secret_key, passphrase, False, test=test)
-    tradeAPI.set_api_url("https://www.okex.win")
+    # tradeAPI.set_api_url("https://www.okex.win")
     # 卖出SHIB试试
     # result = tradeAPI.order('SHIB-USDT', TdMode.CASH, OrderType.MARKET, -1000000)
     # print(result)
