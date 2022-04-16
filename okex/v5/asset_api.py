@@ -13,7 +13,7 @@ import pandas as pd
 
 class AssetAPI(Client):
 
-    def __init__(self, api_key, api_secret_key, passphrase, use_server_time=False, test=False, first=False):
+    def __init__(self, api_key: str, api_secret_key: str, passphrase: str, use_server_time: bool = False, test: bool = False, first: bool = False):
         Client.__init__(self, api_key, api_secret_key, passphrase, use_server_time, test, first)
 
     def deposit_address(self, ccy:Union[CcyType, str]):
@@ -25,7 +25,7 @@ class AssetAPI(Client):
 
         return data
 
-    def balances(self, ccy:Optional[Union[CcyType, str, Iterable[Union[CcyType, str]]]]=None):
+    def balances(self, ccy: Optional[Union[CcyType, str, Iterable[Union[CcyType, str]]]] = None):
         params = {}
         if ccy is not None:
             if isinstance(ccy, Iterable):
