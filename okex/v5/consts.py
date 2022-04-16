@@ -25,6 +25,7 @@ POSITIONS = '/api/v5/account/positions'
 BILLS = '/api/v5/account/bills'
 BILLS_ARCHIVE = '/api/v5/account/bills-archive'
 CONFIG = '/api/v5/account/config'
+SET_POSITION_MODE = '/api/v5/account/set-position-mode'
 
 
 # asset
@@ -39,6 +40,13 @@ INDEX_TICKERS = '/api/v5/market/index-tickers'
 BOOKS = '/api/v5/market/books'
 CANDLES = '/api/v5/market/candles'
 HISTORY_CANDLES = '/api/v5/market/history-candles'
+INDEX_CANDLES = '/api/v5/market/index-candles'
+MARK_PRICE_CANDLES = '/api/v5/market/mark-price-candles'
+TRADES = '/api/v5/market/trades'
+PLATFORM_24_VOLUME = '/api/v5/market/platform-24-volume'
+OPEN_ORACLE = '/api/v5/market/open-oracle'
+EXCHANGE_RATE = '/api/v5/market/exchange-rate'
+INDEX_COMPONENTS = '/api/v5/market/index-components'
 
 # public
 INSTRUMENTS = '/api/v5/public/instruments'
@@ -49,3 +57,6 @@ ORDER = '/api/v5/trade/order'
 BATCH_ORDERS = '/api/v5/trade/batch-orders'
 CANCEL_ORDER = '/api/v5/trade/cancel-order'
 CANCEL_BATCH_ORDERS = '/api/v5/trade/cancel-batch-orders'
+
+# system
+STATUS = '/api/v5/system/status'

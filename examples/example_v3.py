@@ -1,3 +1,11 @@
+import sys
+import os
+
+sys.path.append(
+    os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
+)
+
+
 import okex.v3.account_api as account
 import okex.v3.futures_api as future
 import okex.v3.lever_api as lever

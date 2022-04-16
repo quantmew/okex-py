@@ -21,6 +21,6 @@ class SystemAPI(Client):
         if state is not None:
             params['state'] = state
 
-        data = self._request_with_params(GET, INSTRUMENTS, params)["data"]
+        data = self._request_with_params(GET, STATUS, params)["data"]
 
         return data

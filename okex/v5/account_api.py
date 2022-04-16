@@ -1,5 +1,5 @@
 
-from typing import Union, Optional, Iterable
+from typing import Any, Dict, Union, Optional, Iterable
 
 from .client import Client
 from .consts import *
@@ -13,13 +13,20 @@ from .cttype import CtType
 from .billtype import BillType, BillSubType
 
 import pandas as pd
+
+from enum import Enum
+
+class PosMode(Enum):
+    LONG_SHORT_MODE = "long_short_mode"
+    NET_MODE = "net_mode"
+
 class AccountAPI(Client):
 
     def __init__(self, api_key, api_secret_key, passphrase, use_server_time=False, test=False, first=False):
         Client.__init__(self, api_key, api_secret_key, passphrase, use_server_time, test, first)
 
     # get account position risk
-    def position_risk(self, instType: Optional[Union[InstType, str]] = None):
+    def position_risk(self, instType: Optional[Union[InstType, str]] = None) -> Dict[str, Any]:
         params = {}
         if instType is not None:
             params['instType'] = enum_to_str(instType)
@@ -29,14 +36,14 @@ class AccountAPI(Client):
         return data
 
     # get balance
-    def balance(self, ccyType: Optional[Union[CcyType, str]] = None):
+    def balance(self, ccyType: Optional[Union[CcyType, str]] = None) -> Dict[str, Any]:
         params = {}
         if ccyType is not None:
             params['ccyType'] = enum_to_str(ccyType)
         return self._request_with_params(GET, BALANCE, params)['data']
 
     # get specific currency info
-    def positions(self, instType: Optional[Union[InstType, str]] = None, instId: Optional[str] = None, posId: Optional[Union[str, Iterable]] = None):
+    def positions(self, instType: Optional[Union[InstType, str]] = None, instId: Optional[str] = None, posId: Optional[Union[str, Iterable]] = None) -> Dict[str, Any]:
         params = {}
         if instType is not None:
             params['instType'] = enum_to_str(instType)
@@ -61,7 +68,7 @@ class AccountAPI(Client):
                         after: Optional[int] = None,
                         before: Optional[int] = None,
                         limit: Optional[int] = None
-                        ):
+                        ) -> pd.DataFrame:
         params = {}
         if instType is not None:
             params['instType'] = enum_to_str(instType)
@@ -99,7 +106,7 @@ class AccountAPI(Client):
                         after: Optional[int] = None,
                         before: Optional[int] = None,
                         limit: Optional[int] = None
-                        ):
+                        ) -> pd.DataFrame:
         params = {}
         if instType is not None:
             params['instType'] = enum_to_str(instType)
@@ -128,6 +135,12 @@ class AccountAPI(Client):
         
         return df
 
-    def config(self):
+    def config(self) -> Dict[str, Any]:
         data = self._request_without_params(GET, CONFIG)['data']
+        return data
+
+    def set_position_mode(self, posMode: Union[str, PosMode]) -> Dict[str, Any]:
+        params = {}
+        params['posMode'] = enum_to_str(posMode)
+        data = self._request_without_params(POST, SET_POSITION_MODE, params)['data']
         return data

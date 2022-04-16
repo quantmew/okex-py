@@ -129,6 +129,5 @@ dmypy.json
 .pyre/
 
 /.vscode/
-/api.json
 /api_real.json
 /api_test.json
