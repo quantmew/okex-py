@@ -7,3 +7,4 @@ class InstType(Enum):
     SWAP = "SWAP"
     FUTURES = "FUTURES"
     OPTION = "OPTION"
+    ANY = "ANY"

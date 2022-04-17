@@ -1,6 +1,8 @@
 import hmac
 import base64
+import time
 import datetime
+from typing import Iterable
 from . import consts as c
 
 from enum import Enum
@@ -20,6 +22,12 @@ def iterable_to_str(l):
             ret += ',' + v
     
     return ret
+
+def to_list(l):
+    if isinstance(l, Iterable):
+        return list(l)
+    else:
+        return [l]
 
 def sign(message, secret_key):
     mac = hmac.new(bytes(secret_key, encoding='utf8'), bytes(message, encoding='utf-8'), digestmod='sha256')
@@ -50,10 +58,13 @@ def parse_params_to_str(params):
     return url[0:-1]
 
 
-def get_timestamp():
+def get_timestamp() -> str:
     now = datetime.datetime.utcnow()
     t = now.isoformat("T", "milliseconds")
     return t + "Z"
+
+def get_local_timestamp() -> int:
+    return int(time.time())
 
 def signature(timestamp, method, request_path, body, secret_key):
     if str(body) == '{}' or str(body) == 'None':

@@ -1,4 +1,9 @@
-API_URL = 'https://www.okex.com'
+# API_URL = 'https://www.okex.com'
+API_URL = 'https://www.okx.com'
+WS_PUBLIC_URL = "wss://ws.okx.com:8443/ws/v5/public"
+WS_PRIVATE_URL = "wss://ws.okx.com:8443/ws/v5/private"
+WS_PUBLIC_TEST_URL = "wss://wspap.okx.com:8443/ws/v5/public?brokerId=9999"
+WS_PRIVATE_TEST_URL = "wss://wspap.okx.com:8443/ws/v5/private?brokerId=9999"
 
 CONTENT_TYPE = 'Content-Type'
 OK_ACCESS_KEY = 'OK-ACCESS-KEY'
