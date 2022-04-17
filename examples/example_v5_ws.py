@@ -13,7 +13,7 @@ sys.path.append(
 
 import json
 
-from okex.v5.ws_api import WebSocketAPI, Channel
+from okex.v5.ws_api import WebSocketAPI, WebSocketClient, Channel
 from okex.v5.insttype import InstType
 
 import asyncio
@@ -33,12 +33,13 @@ async def main():
     secret_key = obj['secret_key']
     passphrase = obj['passphrase']
 
-    async with WebSocketAPI(api_key, secret_key, passphrase, test=True) as api:
-        await api.subscribe(Channel(name='instruments', instType=InstType.FUTURES))
+    async with WebSocketClient(api_key, secret_key, passphrase, test=True) as api:
+        await api.subscribe(Channel(name='instruments', instType=InstType.SPOT))
         # await api.subscribe(Channel(name='tickers', instId='BTC/USDT'))
         # await api.subscribe(Channel(name='account'))
         while True:
-            msg = api.public_websocket.recv()
+            await asyncio.sleep(0.5)
+            msg = await api.recv()
             print(msg)
 
 if __name__ == '__main__':

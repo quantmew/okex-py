@@ -60,19 +60,18 @@ class Channel(object):
             "channel": self.name,
         }
         if self.instType is not None:
-            ret["inst_type"] = self.instType
+            ret["instType"] = self.instType
         if self.uly is not None:
             ret["uly"] = self.uly
         if self.instId is not None:
-            ret["inst_id"] = self.instId
+            ret["instId"] = self.instId
         return ret
 
-class WebSocketAPI(object):
-    def __init__(self, api_key, api_secret_key, passphrase, use_server_time=False, test=False):
+class WebSocketClient(object):
+    def __init__(self, api_key: str, api_secret_key: str, passphrase: str, test=False):
         self.API_KEY = api_key
         self.API_SECRET_KEY = api_secret_key
         self.PASSPHRASE = passphrase
-        self.use_server_time = use_server_time
         self.test = test
 
         if test:
@@ -223,3 +222,28 @@ class WebSocketAPI(object):
             await self.unsubscribe_public(public_channels)
         if len(private_channels) > 0:
             await self.unsubscribe_private(private_channels)
+    async def recv(self):
+        result = None
+        if self.public_websocket is not None:
+            result = await asyncio.get_event_loop().run_in_executor(None, self.public_websocket.recv)
+        if self.private_websocket is not None:
+            result = await asyncio.get_event_loop().run_in_executor(None, self.private_websocket.recv)
+        return result
+
+class WebSocketAPI(object):
+    def __init__(self, api_key: str, api_secret_key: str, passphrase: str, test=False):
+        super().__init__()
+        self.API_KEY = api_key
+        self.API_SECRET_KEY = api_secret_key
+        self.PASSPHRASE = passphrase
+        self.test = test
+        self.we_manager = {}
+    
+    async def subscribe_instruments(self, instType: Optional[Union[str, InstType]], name: Optional[str] = None):
+        client = WebSocketClient(self.API_KEY, self.API_SECRET_KEY, self.PASSPHRASE, self.test)
+        if name is None:
+            self.we_manager['instruments'] = client
+        else:
+            self.we_manager[name] = client
+        await client.subscribe(Channel(name="instrument", instType=instType))
+
