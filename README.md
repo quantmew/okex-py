@@ -2,7 +2,7 @@
 OKEx数字货币自动交易python语言SDK (非官方)  
 OKEx Cryptocurrency Exchange python SDK (Unofficial)
 
-本项目基于V5 API，支持WebSocket接口
+本项目基于V5 API，支持WebSocket接口  
 This project supports V5 REST and WebSocket API.
 
 ## 使用例子 Example

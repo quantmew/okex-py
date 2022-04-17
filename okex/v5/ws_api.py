@@ -1,5 +1,6 @@
 
 import asyncio
+from threading import Timer
 from typing import Callable, Dict, List, Optional, Union
 import websocket
 import datetime
@@ -39,6 +40,28 @@ PRIVATE_CHANNELS = ["account", "positions", "balance_and_position", "orders", "o
 
 def is_private_channel(channel: str) -> bool:
     return channel in PRIVATE_CHANNELS
+
+class ContinousTimer(object):
+    def __init__(self, interval: float, callback: Callable):
+        self.interval = interval
+        self.timer = Timer(interval=interval, function=self.callback_wrapper(callback))
+
+    def callback_wrapper(self, callback: Callable):
+        def wrapper(*args, **kwargs):
+            self.timer.cancel()
+            self.timer = Timer(interval=self.interval, function=callback)
+            self.timer.start()
+            callback(*args, **kwargs)
+        return wrapper
+
+    def start(self):
+        if self.timer is not None:
+            self.timer.start()
+    
+    def cancel(self):
+        if self.timer is not None:
+            self.timer.cancel()
+            self.timer = None
 
 class AccountInfo(object):
     def __init__(self, apiKey: str, passphrase: str) -> None:
@@ -84,14 +107,33 @@ class WebSocketClient(object):
         self.public_websocket = None
         self.private_websocket = None
 
+        self.keep_alive_timer = None
+
+    def is_connected(self) -> bool:
+        if self.public_websocket is not None:
+            if self.public_websocket.connected:
+                return True
+        if self.private_websocket is not None:
+            if self.private_websocket.connected:
+                return True
+        return False
+
     async def connect_public(self) -> None:
-        self.public_websocket = websocket.WebSocket()
+        self.public_websocket = websocket.WebSocket(enable_multithread=True)
         self.public_websocket.connect(self.public_api_url)
+
+        if self.keep_alive_timer is None:
+            self.keep_alive_timer = ContinousTimer(10.0, self.ping)
+            self.keep_alive_timer.start()
     
     async def connect_private(self) -> None:
-        self.private_websocket = websocket.WebSocket()
+        self.private_websocket = websocket.WebSocket(enable_multithread=True)
         self.private_websocket.connect(self.private_api_url)
         await self.login()
+
+        if self.keep_alive_timer is None:
+            self.keep_alive_timer = ContinousTimer(10.0, self.ping)
+            self.keep_alive_timer.start()
 
     async def disconnect_public(self) -> None:
         if self.public_websocket is not None:
@@ -106,6 +148,10 @@ class WebSocketClient(object):
     async def disconnect(self) -> None:
         await self.disconnect_public()
         await self.disconnect_private()
+
+        if self.keep_alive_timer is not None:
+            self.keep_alive_timer.cancel()
+            self.keep_alive_timer = None
 
     async def __aenter__(self):
         return self
@@ -143,9 +189,7 @@ class WebSocketClient(object):
         self.private_websocket.send(json.dumps(params))
         ret = self.private_websocket.recv()
         retObj = json.loads(ret)
-        if retObj['code'] == "0":
-            print("login success")
-        else:
+        if retObj['code'] != "0":
             print("login failed")
 
     def subscribe_params(self, channels: Union[List[Channel], Channel]):
@@ -169,7 +213,7 @@ class WebSocketClient(object):
         self.public_websocket.send(json.dumps(params))
         ret = self.public_websocket.recv()
         retObj = json.loads(ret)
-        print(retObj)
+        # print(retObj)
     
     async def subscribe_private(self, channels: Union[List[Channel], Channel]):
         if self.private_websocket is None:
@@ -181,7 +225,7 @@ class WebSocketClient(object):
         self.private_websocket.send(json.dumps(params))
         ret = self.private_websocket.recv()
         retObj = json.loads(ret)
-        print(retObj)
+        # print(retObj)
 
     async def subscribe(self, channels: Union[List[Channel], Channel]):
         channel_list = to_list(channels)
@@ -201,7 +245,7 @@ class WebSocketClient(object):
         self.public_websocket.send(json.dumps(params))
         ret = self.public_websocket.recv()
         retObj = json.loads(ret)
-        print(retObj)
+        # print(retObj)
     
     async def unsubscribe_private(self, channels: Union[List[Channel], Channel]):
         channel_list = to_list(channels)
@@ -210,7 +254,7 @@ class WebSocketClient(object):
         self.private_websocket.send(json.dumps(params))
         ret = self.private_websocket.recv()
         retObj = json.loads(ret)
-        print(retObj)
+        # print(retObj)
 
     async def unsubscribe(self, channels: Union[List[Channel], Channel]):
         channel_list = to_list(channels)
@@ -223,12 +267,22 @@ class WebSocketClient(object):
         if len(private_channels) > 0:
             await self.unsubscribe_private(private_channels)
     async def recv(self):
-        result = None
+        tasks = []
         if self.public_websocket is not None:
-            result = await asyncio.get_event_loop().run_in_executor(None, self.public_websocket.recv)
+            tasks.append(asyncio.get_event_loop().run_in_executor(None, self.public_websocket.recv))
         if self.private_websocket is not None:
-            result = await asyncio.get_event_loop().run_in_executor(None, self.private_websocket.recv)
-        return result
+            tasks.append(asyncio.get_event_loop().run_in_executor(None, self.private_websocket.recv))
+
+        done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
+
+        ret = None
+        if len(done) != 0:
+            ret = list(done)[0].result()
+        
+        if ret == "pong":
+            return None
+        else:
+            return json.loads(ret)
 
 class WebSocketAPI(object):
     def __init__(self, api_key: str, api_secret_key: str, passphrase: str, test=False):

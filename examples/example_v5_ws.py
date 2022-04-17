@@ -34,13 +34,17 @@ async def main():
     passphrase = obj['passphrase']
 
     async with WebSocketClient(api_key, secret_key, passphrase, test=True) as api:
-        await api.subscribe(Channel(name='instruments', instType=InstType.SPOT))
+        await api.subscribe([Channel(name='instruments', instType=InstType.SPOT), Channel(name='account')])
         # await api.subscribe(Channel(name='tickers', instId='BTC/USDT'))
         # await api.subscribe(Channel(name='account'))
-        while True:
+        while api.is_connected():
             await asyncio.sleep(0.5)
-            msg = await api.recv()
-            print(msg)
+            try:
+                msg = await api.recv()
+                print(msg)
+            except Exception as e:
+                print(e)
+                break
 
 if __name__ == '__main__':
     asyncio.run(main())
