@@ -16,6 +16,20 @@ class AssetAPI(Client):
     def __init__(self, api_key: str, api_secret_key: str, passphrase: str, use_server_time: bool = False, test: bool = False, first: bool = False):
         Client.__init__(self, api_key, api_secret_key, passphrase, use_server_time, test, first)
 
+    def currencies(self):
+        data = self._request_without_params(GET, CURRENCIES)["data"]
+
+        return data
+
+    def balances(self, ccy:Union[CcyType, str]):
+        params = {}
+        if ccy is not None:
+            params['ccy'] = enum_to_str(ccy)
+
+        data = self._request_with_params(GET, BALANCES, params)["data"]
+
+        return data
+
     def deposit_address(self, ccy:Union[CcyType, str]):
         params = {}
         if ccy is not None:

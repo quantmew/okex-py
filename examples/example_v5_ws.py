@@ -41,7 +41,6 @@ async def main():
             await asyncio.sleep(0.5)
             try:
                 msg = await api.recv()
-                print(msg)
             except Exception as e:
                 print(e)
                 break

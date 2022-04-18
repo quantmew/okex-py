@@ -267,22 +267,23 @@ class WebSocketClient(object):
         if len(private_channels) > 0:
             await self.unsubscribe_private(private_channels)
     async def recv(self):
-        tasks = []
-        if self.public_websocket is not None:
-            tasks.append(asyncio.get_event_loop().run_in_executor(None, self.public_websocket.recv))
-        if self.private_websocket is not None:
-            tasks.append(asyncio.get_event_loop().run_in_executor(None, self.private_websocket.recv))
+        while True:
+            tasks = []
+            if self.public_websocket is not None:
+                tasks.append(asyncio.get_event_loop().run_in_executor(None, self.public_websocket.recv))
+            if self.private_websocket is not None:
+                tasks.append(asyncio.get_event_loop().run_in_executor(None, self.private_websocket.recv))
 
-        done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
+            done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
 
-        ret = None
-        if len(done) != 0:
-            ret = list(done)[0].result()
-        
-        if ret == "pong":
-            return None
-        else:
-            return json.loads(ret)
+            ret = None
+            if len(done) != 0:
+                ret = list(done)[0].result()
+            
+            if ret == "pong":
+                continue
+            else:
+                return json.loads(ret)
 
 class WebSocketAPI(object):
     def __init__(self, api_key: str, api_secret_key: str, passphrase: str, test=False):

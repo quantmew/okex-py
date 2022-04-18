@@ -33,8 +33,16 @@ CONFIG = '/api/v5/account/config'
 SET_POSITION_MODE = '/api/v5/account/set-position-mode'
 
 # asset
-DEPOSIT_ADDRESS = '/api/v5/asset/deposit-address'
+CURRENCIES = '/api/v5/asset/currencies'
 BALANCES = '/api/v5/asset/balances'
+ASSET_VALUATION = '/api/v5/asset/asset-valuation'
+TRANSFER = '/api/v5/asset/transfer'
+TRANSFER_STATE = '/api/v5/asset/transfer-state'
+BILLS = '/api/v5/asset/bills'
+DEPPOSIT_LIGHTNING = '/api/v5/asset/deposit-lightning'
+DEPOSIT_ADDRESS = '/api/v5/asset/deposit-address'
+DEPOSIT_HISTORY = '/api/v5/asset/deposit-history'
+
 
 # market
 TICKERS = '/api/v5/market/tickers'
