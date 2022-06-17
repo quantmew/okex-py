@@ -77,9 +77,8 @@ class CancelOrder(object):
 
 class TradeAPI(Client):
 
-    def __init__(self, api_key, api_secret_key, passphrase, use_server_time=False, test=False, first=False):
-        Client.__init__(self, api_key, api_secret_key,
-                        passphrase, use_server_time, test, first)
+    def __init__(self, api_key: str, api_secret_key: str, passphrase: str, use_server_time: bool = False, test: bool = False, first: bool = False):
+        Client.__init__(self, api_key, api_secret_key, passphrase, use_server_time, test, first)
 
     def order(self, instId: str,
               tdMode: Union[TdMode, str],

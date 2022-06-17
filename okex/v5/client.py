@@ -10,7 +10,7 @@ from typing import Dict, Optional
 
 class Client(object):
 
-    def __init__(self, api_key, api_secret_key, passphrase, use_server_time=False, test=False, first=False):
+    def __init__(self, api_key: str, api_secret_key: str, passphrase: str, use_server_time: bool = False, test: bool = False, first: bool = False):
 
         self.API_KEY = api_key
         self.API_SECRET_KEY = api_secret_key
