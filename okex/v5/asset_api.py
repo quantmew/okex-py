@@ -7,7 +7,7 @@ from .utils import enum_to_str, iterable_to_str
 from ..exceptions import OkexParamsException
 
 from .insttype import InstType
-from .ccytype import CcyType
+from .ccytype import CcyType, CcyTypeT
 
 import pandas as pd
 
@@ -21,7 +21,7 @@ class AssetAPI(Client):
 
         return data
 
-    def balances(self, ccy:Union[CcyType, str]):
+    def balances(self, ccy: CcyTypeT):
         params = {}
         if ccy is not None:
             params['ccy'] = enum_to_str(ccy)
@@ -30,7 +30,7 @@ class AssetAPI(Client):
 
         return data
 
-    def deposit_address(self, ccy:Union[CcyType, str]):
+    def deposit_address(self, ccy: CcyTypeT):
         params = {}
         if ccy is not None:
             params['ccy'] = enum_to_str(ccy)
@@ -39,7 +39,7 @@ class AssetAPI(Client):
 
         return data
 
-    def balances(self, ccy: Optional[Union[CcyType, str, Iterable[Union[CcyType, str]]]] = None):
+    def balances(self, ccy: Optional[Union[CcyType, str, Iterable[CcyTypeT]]] = None):
         params = {}
         if ccy is not None:
             if isinstance(ccy, Iterable):

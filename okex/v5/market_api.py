@@ -173,3 +173,7 @@ class MarketAPI(Client):
     def platform_24_volume(self) -> Dict[str, str]:
         data = self._request_without_params(GET, PLATFORM_24_VOLUME)['data']
         return data
+    
+    def exchange_rate(self) -> Dict[str, str]:
+        data = self._request_without_params(GET, EXCHANGE_RATE)['data']
+        return data
