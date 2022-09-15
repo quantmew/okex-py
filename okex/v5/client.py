@@ -60,17 +60,17 @@ class Client(object):
             if self.proxy is None:
                 response = requests.get(url, headers=header)
             else:
-                response = requests.get(url, headers=header, proxies=proxy)
+                response = requests.get(url, headers=header, proxies=self.proxy)
         elif method == c.POST:
             if self.proxy is None:
                 response = requests.post(url, data=body, headers=header)
             else:
-                response = requests.post(url, data=body, headers=header, proxies=proxy)
+                response = requests.post(url, data=body, headers=header, proxies=self.proxy)
         elif method == c.DELETE:
             if self.proxy is None:
                 response = requests.delete(url, headers=header)
             else:
-                response = requests.delete(url, headers=header, proxies=proxy)
+                response = requests.delete(url, headers=header, proxies=self.proxy)
 
         # exception handle
         if not str(response.status_code).startswith('2'):
@@ -102,7 +102,7 @@ class Client(object):
         if self.proxy is None:
             response = requests.get(url)
         else:
-            response = requests.get(url, proxies=proxy)
+            response = requests.get(url, proxies=self.proxy)
         if response.status_code == 200:
             return response.json()['iso']
         else:

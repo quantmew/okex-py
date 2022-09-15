@@ -99,7 +99,10 @@ class TradeAPI(Client):
         if ordType is not None:
             params['ordType'] = enum_to_str(ordType)
         if sz is not None:
-            params['sz'] = str(abs(sz))
+            if isinstance(sz, str):
+                params['sz'] = sz
+            else:
+                params['sz'] = str(abs(sz))
             if sz >= 0:
                 params['side'] = 'buy'
             else:
@@ -143,7 +146,10 @@ class TradeAPI(Client):
             if order.ordType is not None:
                 param['ordType'] = enum_to_str(order.ordType)
             if order.sz is not None:
-                param['sz'] = str(abs(order.sz))
+                if isinstance(order.sz, str):
+                    params['sz'] = order.sz
+                else:
+                    param['sz'] = str(abs(order.sz))
                 if order.sz >= 0:
                     param['side'] = 'buy'
                 else:

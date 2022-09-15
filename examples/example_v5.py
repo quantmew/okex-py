@@ -26,7 +26,6 @@ def get_timestamp():
 
 time = get_timestamp()
 
-
 if __name__ == '__main__':
 
     if os.path.exists('api.json'):
@@ -95,6 +94,12 @@ if __name__ == '__main__':
     # print(result)
     # 获取指数行情
     result = marketAPI.index_tickers(instId='BTC-USDT')
+    # print(result)
+    result = marketAPI.trades(instId='BTC-USDT')
+    # print(result)
+    result = marketAPI.platform_24_volume()
+    # print(result)
+    result = marketAPI.exchange_rate()
     # print(result)
 
     # public
