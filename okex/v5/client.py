@@ -6,7 +6,7 @@ from . import consts as c
 from . import utils
 from .. import exceptions
 
-from typing import Dict, Optional
+from typing import Dict, Literal, Optional
 
 class Client(object):
 
@@ -21,7 +21,7 @@ class Client(object):
         self.api_url = c.API_URL
         self.proxy = None
 
-    def _request(self, method, request_path, params, cursor=False):
+    def _request(self, method: Literal["GET", "POST", "DELETE"], request_path, params, cursor=False):
         if method == c.GET:
             request_path = request_path + utils.parse_params_to_str(params)
         # url
