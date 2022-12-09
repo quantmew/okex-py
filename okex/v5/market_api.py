@@ -81,7 +81,7 @@ class MarketAPI(Client):
             params['limit'] = str(limit)
         data = self._request_with_params(GET, CANDLES, params)["data"]
 
-        df = pd.DataFrame(data, columns=["ts", "o", "h", "l", "c", "vol", "volCcy"])
+        df = pd.DataFrame(data, columns=["ts", "o", "h", "l", "c", "vol", "volCcy", "volCcyQuote", "confirm"])
         df = df.apply(pd.to_numeric, errors='ignore')
         df['ts'] = df['ts'].apply(lambda x: datetime.datetime.fromtimestamp(int(x)/1000))
         return df
@@ -105,7 +105,7 @@ class MarketAPI(Client):
             params['limit'] = str(limit)
         data = self._request_with_params(GET, CANDLES, params)["data"]
 
-        df = pd.DataFrame(data, columns=["ts", "o", "h", "l", "c", "vol", "volCcy"])
+        df = pd.DataFrame(data, columns=["ts", "o", "h", "l", "c", "vol", "volCcy", "volCcyQuote", "confirm"])
         df = df.apply(pd.to_numeric, errors='ignore')
         df['ts'] = df['ts'].apply(lambda x: datetime.datetime.fromtimestamp(int(x)/1000))
         return df
