@@ -24,6 +24,13 @@ print(result)
 
 ## 安装 Installation
 
+### 方法一(Method 1)：
+1. 直接安装，Install the package
+```
+pip install git+https://github.com/quantmew/okex-py.git 
+```
+
+### 方法二(Method 2)：
 1. 克隆本仓库，Clone the repository
 ```
 git clone https://github.com/quantmew/okex-py.git
@@ -35,7 +42,6 @@ cd okex-py
 pip install .
 ```
 
-
 ## 免责声明 Disclaimers
 API接口尚不稳定  
 API is not yet stable  
@@ -44,6 +50,6 @@ This project does not guarantee the behavior of the software and is not responsi
 
 ## 捐助 Donation
 如果您觉得这个项目有价值的话，可以通过捐助帮助我们更好地维护这个项目。  
-If you think this project is valuable, you can donate to us to better maintain this project.   
+If you think this project is valuable, you can donate to us for better maintainments.   
 ETH Address: 0x4E59baf24bB6e7E8b935A32B33b6E6b8Abd67a2a   
 
