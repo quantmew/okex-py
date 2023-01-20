@@ -1,5 +1,6 @@
 import datetime
 from typing import Dict, Union, Optional, Iterable
+from typeguard import check_argument_types, check_return_type
 
 from .client import Client
 from .consts import *
@@ -13,10 +14,11 @@ import pandas as pd
 
 class MarketAPI(Client):
 
-    def __init__(self, api_key, api_secret_key, passphrase, use_server_time=False, test=False, first=False):
+    def __init__(self, api_key:str, api_secret_key:str, passphrase:str, use_server_time:bool=False, test:bool=False, first:bool=False):
         Client.__init__(self, api_key, api_secret_key, passphrase, use_server_time, test, first)
 
     def tickers(self, instType: InstType, uly: Optional[str] = None) -> pd.DataFrame:
+        assert check_argument_types()
         params = {}
         if instType is not None:
             params['instType'] = enum_to_str(instType)
@@ -30,6 +32,7 @@ class MarketAPI(Client):
         return df
 
     def ticker(self, instId: str) -> pd.DataFrame:
+        assert check_argument_types()
         params = {}
         if instId is not None:
             params['instId'] = instId
@@ -41,6 +44,7 @@ class MarketAPI(Client):
         return df
 
     def index_tickers(self, quoteCcy: Optional[Union[CcyType, str]] = None, instId: Optional[str] = None) -> pd.DataFrame:
+        assert check_argument_types()
         params = {}
         if quoteCcy is not None:
             params['quoteCcy'] = enum_to_str(quoteCcy)
@@ -54,6 +58,7 @@ class MarketAPI(Client):
         return df
 
     def books(self, instId: str, sz: Optional[Union[int, str]]=None):
+        assert check_argument_types()
         params = {}
         if instId is not None:
             params['instId'] = instId
@@ -68,6 +73,7 @@ class MarketAPI(Client):
                     before: Optional[Union[int, str]]=None,
                     bar: Optional[str]=None,
                     limit: Optional[Union[int, str]]=None) -> pd.DataFrame:
+        assert check_argument_types()
         params = {}
         if instId is not None:
             params['instId'] = str(instId)
@@ -92,6 +98,7 @@ class MarketAPI(Client):
                     before: Optional[Union[int, str]]=None,
                     bar: Optional[str]=None,
                     limit: Optional[Union[int, str]]=None) -> pd.DataFrame:
+        assert check_argument_types()
         params = {}
         if instId is not None:
             params['instId'] = str(instId)
@@ -115,6 +122,7 @@ class MarketAPI(Client):
                     before: Optional[Union[int, str]]=None,
                     bar: Optional[str]=None,
                     limit: Optional[Union[int, str]]=None) -> pd.DataFrame:
+        assert check_argument_types()
         params = {}
         if instId is not None:
             params['instId'] = str(instId)
@@ -128,7 +136,7 @@ class MarketAPI(Client):
             params['limit'] = str(limit)
         data = self._request_with_params(GET, INDEX_CANDLES, params)["data"]
 
-        df = pd.DataFrame(data, columns=["ts", "o", "h", "l", "c"])
+        df = pd.DataFrame(data, columns=["ts", "o", "h", "l", "c", "confirm"])
         df = df.apply(pd.to_numeric, errors='ignore')
         df['ts'] = df['ts'].apply(lambda x: datetime.datetime.fromtimestamp(int(x)/1000))
         return df
@@ -138,6 +146,7 @@ class MarketAPI(Client):
                     before: Optional[Union[int, str]]=None,
                     bar: Optional[str]=None,
                     limit: Optional[Union[int, str]]=None) -> pd.DataFrame:
+        assert check_argument_types()
         params = {}
         if instId is not None:
             params['instId'] = str(instId)
@@ -151,12 +160,52 @@ class MarketAPI(Client):
             params['limit'] = str(limit)
         data = self._request_with_params(GET, MARK_PRICE_CANDLES, params)["data"]
 
-        df = pd.DataFrame(data, columns=["ts", "o", "h", "l", "c"])
+        df = pd.DataFrame(data, columns=["ts", "o", "h", "l", "c", "confirm"])
+        df = df.apply(pd.to_numeric, errors='ignore')
+        df['ts'] = df['ts'].apply(lambda x: datetime.datetime.fromtimestamp(int(x)/1000))
+        return df
+    
+    def history_mark_price_candles(self, instId: str,
+                    after: Optional[Union[int, str]]=None,
+                    before: Optional[Union[int, str]]=None,
+                    bar: Optional[str]=None,
+                    limit: Optional[Union[int, str]]=None) -> pd.DataFrame:
+        assert check_argument_types()
+        params = {}
+        if instId is not None:
+            params['instId'] = str(instId)
+        if after is not None:
+            params['after'] = str(after)
+        if before is not None:
+            params['before'] = str(before)
+        if bar is not None:
+            params['bar'] = str(bar)
+        if limit is not None:
+            params['limit'] = str(limit)
+        data = self._request_with_params(GET, MARK_PRICE_CANDLES, params)["data"]
+
+        df = pd.DataFrame(data, columns=["ts", "o", "h", "l", "c", "confirm"])
         df = df.apply(pd.to_numeric, errors='ignore')
         df['ts'] = df['ts'].apply(lambda x: datetime.datetime.fromtimestamp(int(x)/1000))
         return df
 
     def trades(self, instId: str, limit: Optional[Union[int, str]]=None) -> pd.DataFrame:
+        assert check_argument_types()
+        params = {}
+        if instId is not None:
+            params['instId'] = str(instId)
+        if limit is not None:
+            params['limit'] = str(limit)
+
+        data = self._request_with_params(GET, TRADES, params)["data"]
+
+        df = pd.DataFrame(data, columns=["instId", "tradeId", "px", "sz", "side", "ts"])
+        df = df.apply(pd.to_numeric, errors='ignore')
+        df['ts'] = df['ts'].apply(lambda x: datetime.datetime.fromtimestamp(int(x)/1000))
+        return df
+
+    def history_trades(self, instId: str, limit: Optional[Union[int, str]]=None) -> pd.DataFrame:
+        assert check_argument_types()
         params = {}
         if instId is not None:
             params['instId'] = str(instId)

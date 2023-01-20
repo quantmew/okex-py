@@ -1,6 +1,6 @@
 # okex-py
-欧易OKEx(现OKX)数字货币自动交易python语言SDK (非官方)  
-OKEx(OKX) Cryptocurrency Exchange python SDK (Unofficial)
+欧易OKEx (现OKX) 数字货币自动交易python语言SDK (非官方)  
+OKEx (OKX) Cryptocurrency Exchange python SDK (Unofficial)
 
 本项目基于V5 API，支持WebSocket接口  
 This project supports V5 REST and WebSocket API.
@@ -21,16 +21,17 @@ print(result)
 
 ## 文档 Documentation
 施工中
+Future Work
 
 ## 安装 Installation
 
-### 方法一(Method 1)：
+### 方法一 (Method 1)：
 1. 直接安装，Install the package
 ```
 pip install git+https://github.com/quantmew/okex-py.git 
 ```
 
-### 方法二(Method 2)：
+### 方法二 (Method 2)：
 1. 克隆本仓库，Clone the repository
 ```
 git clone https://github.com/quantmew/okex-py.git
@@ -50,6 +51,6 @@ This project does not guarantee the behavior of the software and is not responsi
 
 ## 捐助 Donation
 如果您觉得这个项目有价值的话，可以通过捐助帮助我们更好地维护这个项目。  
-If you think this project is valuable, you can donate to us for better maintainments.   
+If you think this project is valuable, you can donate to us for better maintainments.
 ETH Address: 0x4E59baf24bB6e7E8b935A32B33b6E6b8Abd67a2a   
 

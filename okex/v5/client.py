@@ -6,12 +6,11 @@ from . import consts as c
 from . import utils
 from .. import exceptions
 
-from typing import Dict, Literal, Optional
+from typing import Dict, Literal, Optional, Union
 
 class Client(object):
 
     def __init__(self, api_key: str, api_secret_key: str, passphrase: str, use_server_time: bool = False, test: bool = False, first: bool = False):
-
         self.API_KEY = api_key
         self.API_SECRET_KEY = api_secret_key
         self.PASSPHRASE = passphrase
@@ -21,7 +20,7 @@ class Client(object):
         self.api_url = c.API_URL
         self.proxy = None
 
-    def _request(self, method: Literal["GET", "POST", "DELETE"], request_path, params, cursor=False):
+    def _request(self, method: Literal["GET", "POST", "DELETE"], request_path: str, params: Union[str, dict], cursor=False):
         if method == c.GET:
             request_path = request_path + utils.parse_params_to_str(params)
         # url
@@ -91,10 +90,10 @@ class Client(object):
         except ValueError:
             raise exceptions.OkexRequestException('Invalid Response: %s' % response.text)
 
-    def _request_without_params(self, method, request_path):
+    def _request_without_params(self, method: str, request_path: str):
         return self._request(method, request_path, {})
 
-    def _request_with_params(self, method, request_path, params, cursor=False):
+    def _request_with_params(self, method: str, request_path: str, params: Union[str, dict], cursor=False):
         return self._request(method, request_path, params, cursor)
 
     def _get_timestamp(self):

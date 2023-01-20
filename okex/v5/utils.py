@@ -66,7 +66,7 @@ def get_timestamp() -> str:
 def get_local_timestamp() -> int:
     return int(time.time())
 
-def signature(timestamp, method, request_path, body, secret_key):
+def signature(timestamp, method: str, request_path: str, body, secret_key: str):
     if str(body) == '{}' or str(body) == 'None':
         body = ''
     message = str(timestamp) + str.upper(method) + request_path + str(body)
