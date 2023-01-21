@@ -14,6 +14,9 @@ class OkexAPIException(Exception):
             if "error_code" in json_res.keys() and "error_message" in json_res.keys():
                 self.code = json_res['error_code']
                 self.message = json_res['error_message']
+            elif "code" in json_res.keys() and "msg" in json_res.keys():
+                self.code = json_res['code']
+                self.message = json_res['msg']
             else:
                 self.code = 'None'
                 self.message = 'System error'

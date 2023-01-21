@@ -168,9 +168,19 @@ class AccountAPI(Client):
     
     def set_leverage(self, lever: Union[int, str],
                     mgnMode: Union[MgnMode, str],
+                    instId: Optional[str] = None,
                     ccyType: Optional[Union[CcyType, str]] = None,
                     posSide: Optional[Union[PosSide, str]] = None) -> Dict[str, Any]:
         assert check_argument_types()
-        raise NotImplementedError()
         params = {}
-        return params
+        params["lever"] = str(lever)
+        params["mgnMode"] = enum_to_str(mgnMode)
+        if instId is not None:
+            params['instId'] = str(instId)
+        if ccyType is not None:
+            params['ccyType'] = enum_to_str(ccyType)
+        if posSide is not None:
+            params['posSide'] = enum_to_str(posSide)
+        
+        data = self._request_with_params(POST, SET_LEVERAGE, params)['data']
+        return data

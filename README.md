@@ -26,7 +26,7 @@ Future Work
 ## 安装 Installation
 
 ### 方法一 (Method 1)：
-1. 直接安装，Install the package
+1. 直接安装，Install the package directly
 ```
 pip install git+https://github.com/quantmew/okex-py.git 
 ```

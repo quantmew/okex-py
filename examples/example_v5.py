@@ -67,6 +67,8 @@ if __name__ == '__main__':
     # 账单流水查询（近三个月）
     result = accountAPI.bills_archive()
     # print(result)
+    # result = accountAPI.set_leverage(lever=5, mgnMode="cross", instId="BTC-USDT-200802")
+    # print(result)
 
     # market
     marketAPI = market.MarketAPI(api_key, secret_key, passphrase, False, test=test)

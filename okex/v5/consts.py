@@ -31,6 +31,7 @@ BILLS = '/api/v5/account/bills'
 BILLS_ARCHIVE = '/api/v5/account/bills-archive'
 CONFIG = '/api/v5/account/config'
 SET_POSITION_MODE = '/api/v5/account/set-position-mode'
+SET_LEVERAGE = "/api/v5/account/set-leverage"
 
 # asset
 CURRENCIES = '/api/v5/asset/currencies'
