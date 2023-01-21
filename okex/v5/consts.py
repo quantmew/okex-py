@@ -32,6 +32,14 @@ BILLS_ARCHIVE = '/api/v5/account/bills-archive'
 CONFIG = '/api/v5/account/config'
 SET_POSITION_MODE = '/api/v5/account/set-position-mode'
 SET_LEVERAGE = "/api/v5/account/set-leverage"
+MAX_SIZE = "/api/v5/account/max-size"
+MAX_AVAIL_SIZE = "/api/v5/account/max-avail-size"
+MARGIN_BALANCE = "/api/v5/account/position/margin-balance"
+LEVERAGE_INFO = "/api/v5/account/leverage-info"
+MAX_LOAN = "/api/v5/account/max-loan"
+TRADE_FEE = "/api/v5/account/trade-fee"
+INTEREST_ACCRUED = "/api/v5/account/interest-accrued"
+INTEREST_RATE = "/api/v5/account/interest-rate"
 
 # asset
 CURRENCIES = '/api/v5/asset/currencies'
@@ -44,6 +52,9 @@ DEPPOSIT_LIGHTNING = '/api/v5/asset/deposit-lightning'
 DEPOSIT_ADDRESS = '/api/v5/asset/deposit-address'
 DEPOSIT_HISTORY = '/api/v5/asset/deposit-history'
 
+# convert
+CONVERT_CURRENCIES = "/api/v5/asset/convert/currencies"
+CONVERT_CURRENCY_PAIR = "/api/v5/asset/convert/currency-pair"
 
 # market
 TICKERS = '/api/v5/market/tickers'
@@ -79,3 +90,7 @@ CANCEL_BATCH_ORDERS = '/api/v5/trade/cancel-batch-orders'
 
 # system
 STATUS = '/api/v5/system/status'
+
+# user
+SUBACCOUNT_LIST = "/api/v5/users/subaccount/list"
+SUBACCOUNT_MODIFY_APIKEY = "/api/v5/users/subaccount/modify-apikey"

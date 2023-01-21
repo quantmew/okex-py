@@ -6,8 +6,8 @@ from .consts import *
 from .utils import enum_to_str, iterable_to_str
 from ..exceptions import OkexParamsException
 
-from .insttype import InstType
-from .ccytype import CcyType
+from .objects.insttype import InstType
+from .objects.ccytype import CcyType
 
 import pandas as pd
 

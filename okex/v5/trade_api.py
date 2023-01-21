@@ -7,41 +7,11 @@ from .consts import *
 from .utils import enum_to_str, iterable_to_str
 from ..exceptions import OkexParamsException
 
-from .ccytype import CcyType
-
-
-class TdMode(Enum):
-    # 保证金模式
-    ISOLATED = "isolated"
-    CROSS = "cross"
-    # 非保证金模式
-    CASH = "cash"
-
-
-class PosSide(Enum):
-    LONG = "long"
-    SHORT = "short"
-
-
-class OrderType(Enum):
-    # 市价单
-    MARKET = "market"
-    # 限价单
-    LIMIT = "limit"
-    # 只做maker单
-    POST_ONLY = "post_only"
-    # 全部成交或立即取消
-    FOK = "fok"
-    # 立即成交并取消剩余
-    IOC = "ioc"
-
-
-class TrgCCY(Enum):
-    # 交易货币
-    BASE_CCY = "base_ccy"
-    # 计价货币
-    QUOTE_CCY = "quote_ccy"
-
+from .objects.ccytype import CcyType
+from .objects.posside import PosSide
+from .objects.tdmode import TdMode
+from .objects.ordertype import OrderType
+from .objects.trgccy import TrgCCY
 
 class Order(object):
     def __init__(self,

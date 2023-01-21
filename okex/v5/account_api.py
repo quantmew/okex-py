@@ -7,12 +7,12 @@ from .consts import *
 from .utils import enum_to_str, iterable_to_str
 from ..exceptions import OkexParamsException
 
-from .insttype import InstType
-from .ccytype import CcyType
-from .mgnmode import MgnMode
-from .cttype import CtType
-from .billtype import BillType, BillSubType
-from okex.v5.trade_api import PosSide
+from .objects.insttype import InstType
+from .objects.ccytype import CcyType
+from .objects.mgnmode import MgnMode
+from .objects.cttype import CtType
+from .objects.billtype import BillType, BillSubType
+from .objects.posside import PosSide
 
 import pandas as pd
 
