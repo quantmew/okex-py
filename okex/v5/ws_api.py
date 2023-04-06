@@ -8,7 +8,7 @@ import json
 
 from .consts import WS_PUBLIC_TEST_URL, WS_PRIVATE_TEST_URL, WS_PUBLIC_URL, WS_PRIVATE_URL
 from .utils import get_timestamp, get_local_timestamp, signature, to_list, enum_to_str
-from .insttype import InstType
+from .objects.insttype import InstType
 
 
 PUBLIC_CHANNELS = ["instruments", "tickers", "open-interest",

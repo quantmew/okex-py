@@ -10,7 +10,9 @@ from .objects.insttype import InstType
 from .objects.ccytype import CcyType
 
 import pandas as pd
+from typeguard import typechecked
 
+@typechecked
 class SystemAPI(Client):
 
     def __init__(self, api_key: str, api_secret_key: str, passphrase: str, use_server_time: bool = False, test: bool = False, first: bool = False):

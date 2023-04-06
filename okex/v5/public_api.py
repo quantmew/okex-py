@@ -1,6 +1,6 @@
 import datetime
 from typing import Any, Dict, Union, Optional, Iterable
-from typeguard import check_argument_types, check_return_type
+from typeguard import typechecked
 
 from .client import Client
 from .consts import *
@@ -12,6 +12,7 @@ from .objects.ccytype import CcyType
 
 import pandas as pd
 
+@typechecked
 class PublicAPI(Client):
 
     def __init__(self, api_key: str, api_secret_key: str, passphrase: str, use_server_time: bool = False, test: bool = False, first: bool = False):

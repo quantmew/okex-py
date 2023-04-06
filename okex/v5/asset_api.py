@@ -6,11 +6,13 @@ from .consts import *
 from .utils import enum_to_str, iterable_to_str
 from ..exceptions import OkexParamsException
 
-from .insttype import InstType
-from .ccytype import CcyType, CcyTypeT
+from .objects.insttype import InstType
+from .objects.ccytype import CcyType, CcyTypeT
 
 import pandas as pd
+from typeguard import typechecked
 
+@typechecked
 class AssetAPI(Client):
 
     def __init__(self, api_key: str, api_secret_key: str, passphrase: str, use_server_time: bool = False, test: bool = False, first: bool = False):

@@ -2,6 +2,8 @@
 from typing import Dict, Union, Optional, Iterable
 from enum import Enum
 
+from typeguard import typechecked
+
 from .client import Client
 from .consts import *
 from .utils import enum_to_str, iterable_to_str
@@ -13,6 +15,7 @@ from .objects.tdmode import TdMode
 from .objects.ordertype import OrderType
 from .objects.trgccy import TrgCCY
 
+@typechecked
 class Order(object):
     def __init__(self,
             instId: str,

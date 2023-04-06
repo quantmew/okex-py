@@ -6,7 +6,7 @@ import requests
 import datetime
 import json
 import pandas as pd
-from .exceptions import InvalidDataError, ParamsError
+from .exceptions import OkexAPIException, OkexParamsException
 
 from enum import Enum
 
@@ -122,7 +122,7 @@ class OkAPI(object):
         if obj['code'] == '0':
             return obj['data']
         else:
-            raise InvalidDataError("")
+            raise OkexAPIException("")
 
     def ticker(self, instId: str):
         out = self.get('market', 'ticker', {'instId': instId})
@@ -130,7 +130,7 @@ class OkAPI(object):
         if obj['code'] == '0':
             return obj['data']
         else:
-            raise InvalidDataError("")
+            raise OkexAPIException("")
 
     def tickers(self, instType: InstType, uly: Optional[str]=None):
         params = {'instType': str(instType)}
@@ -141,7 +141,7 @@ class OkAPI(object):
         if obj['code'] == '0':
             return obj['data']
         else:
-            raise InvalidDataError("")
+            raise OkexAPIException("")
 
     def index_tickers(self, quoteCcy: Optional[QuoteCcy]=None, instId: Optional[str]=None):
         pass
@@ -171,7 +171,7 @@ class OkAPI(object):
                 lambda x: datetime.datetime.fromtimestamp(int(x)/1000))
             return df
         else:
-            raise InvalidDataError(obj['code'] + ": " + obj['msg'])
+            raise OkexAPIException(obj['code'] + ": " + obj['msg'])
     
     def history_candles(self, instId:str, bar:str='1m', after:Optional[str]=None, before:Optional[str]=None, limit:int=100):
         params = {
@@ -198,12 +198,12 @@ class OkAPI(object):
                 lambda x: datetime.datetime.fromtimestamp(int(x)/1000))
             return df
         else:
-            raise InvalidDataError(obj['code'] + ": " + obj['msg'])
+            raise OkexAPIException(obj['code'] + ": " + obj['msg'])
 
     def order(self, instId, sz: float, posSide: str = 'long', ordType: OrderType = None, tdMode: str = 'cash'):
 
         if not isinstance(ordType, OrderType):
-            raise ParamsError("ordType必须是OrderType类型")
+            raise OkexParamsException("ordType必须是OrderType类型")
         if sz >= 0:
             order_size = sz
             side = 'buy'
@@ -226,4 +226,4 @@ class OkAPI(object):
         if obj['code'] == '0':
             return obj['data']
         else:
-            raise InvalidDataError(obj['code'] + ": " + obj['msg'])
+            raise OkexAPIException(obj['code'] + ": " + obj['msg'])
