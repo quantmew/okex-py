@@ -231,7 +231,7 @@ class AccountAPI(Client):
                           posSide: Union[PosSide, str],
                           type: Literal["add", "reduce"],
                           amt: Union[float, int, str],
-                          ccy: Optional[Union[InstType, str]] = None,
+                          ccy: Optional[CcyTypeT] = None,
                           loanTrans: Optional[bool]=None):
         params = {}
         params["instId"] = str(instId)
@@ -272,13 +272,37 @@ class AccountAPI(Client):
             params["instFamily"] = str(instFamily)
         return self._request_with_params(GET, TRADE_FEE, params)
 
-    def interest_accrued(self, instId='', ccy='', mgnMode='', after='', before='', limit=''):
-        params = {'instId': instId, 'ccy': ccy, 'mgnMode': mgnMode,
-                  'after': after, 'before': before, 'limit': limit}
+    def interest_accrued(self,
+                         type: Optional[Union[str, int]]=2,
+                         ccy: Optional[CcyTypeT] = None,
+                         instId: Optional[str] = None,
+                         mgnMode: Optional[MgnModeT]=None,
+                         after: Optional[Union[str, int]]=None,
+                         before: Optional[Union[str, int]]=None,
+                         limit: Optional[Union[str, int]]=None
+        ):
+
+        params = {}
+        if type is not None:
+            params["type"] = str(type)
+        if ccy is not None:
+            params["ccy"] = enum_to_str(ccy)
+        if instId is not None:
+            params["instId"] = str(instId)
+        if mgnMode is not None:
+            params["mgnMode"] = enum_to_str(mgnMode)
+        if after is not None:
+            params["after"] = str(after)
+        if before is not None:
+            params["before"] = enum_to_str(before)
+        if limit is not None:
+            params["limit"] = str(limit)
         return self._request_with_params(GET, INTEREST_ACCRUED, params)
 
-    def interest_rate(self, ccy=''):
-        params = {'ccy': ccy}
+    def interest_rate(self, ccy: Optional[CcyTypeT] = None):
+        params = {}
+        if ccy is not None:
+            params["ccy"] = str(ccy)
         return self._request_with_params(GET, INTEREST_RATE, params)
 
     def set_greeks(self, greeksType):

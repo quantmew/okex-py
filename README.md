@@ -5,6 +5,8 @@ OKEx (OKX) Cryptocurrency Exchange python SDK (Unofficial)
 本项目基于V5 API，支持WebSocket接口  
 This project supports V5 REST and WebSocket API.
 
+API Documents:
+[okx-zh-v5](https://www.okx.com/docs-v5/zh/#overview), [okx-en-v5](https://www.okx.com/docs-v5/en/#overview)
 
 ## 前置条件 Requirements
 Python >= 3.10
