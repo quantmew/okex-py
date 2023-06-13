@@ -2,6 +2,8 @@
 from typing import Any, Dict, Literal, Union, Optional, Iterable
 from typeguard import typechecked
 
+from okex.v5.objects.greekstype import GreeksTypeT
+
 from .client import Client
 from .consts import *
 from .utils import enum_to_str, iterable_to_str
@@ -232,7 +234,7 @@ class AccountAPI(Client):
                           type: Literal["add", "reduce"],
                           amt: Union[float, int, str],
                           ccy: Optional[CcyTypeT] = None,
-                          loanTrans: Optional[bool]=None):
+                          loanTrans: Optional[bool]=None) -> Dict[str, Any]:
         params = {}
         params["instId"] = str(instId)
         params["posSide"] = enum_to_str(posSide)
@@ -250,7 +252,7 @@ class AccountAPI(Client):
         params = {'instId': instId, 'mgnMode': enum_to_str(mgnMode)}
         return self._request_with_params(GET, LEVERAGE_INFO, params)
 
-    def max_loan(self, instId: str, mgnMode: MgnModeT, mgnCcy: Optional[CcyTypeT]=None):
+    def max_loan(self, instId: str, mgnMode: MgnModeT, mgnCcy: Optional[CcyTypeT]=None) -> Dict[str, Any]:
         params = {}
         params["instId"] = str(instId)
         params["mgnMode"] = enum_to_str(mgnMode)
@@ -280,7 +282,7 @@ class AccountAPI(Client):
                          after: Optional[Union[str, int]]=None,
                          before: Optional[Union[str, int]]=None,
                          limit: Optional[Union[str, int]]=None
-        ):
+        ) -> Dict[str, Any]:
 
         params = {}
         if type is not None:
@@ -299,34 +301,66 @@ class AccountAPI(Client):
             params["limit"] = str(limit)
         return self._request_with_params(GET, INTEREST_ACCRUED, params)
 
-    def interest_rate(self, ccy: Optional[CcyTypeT] = None):
+    def interest_rate(self, ccy: Optional[CcyTypeT] = None) -> Dict[str, Any]:
         params = {}
         if ccy is not None:
             params["ccy"] = str(ccy)
         return self._request_with_params(GET, INTEREST_RATE, params)
 
-    def set_greeks(self, greeksType):
-        params = {'greeksType': greeksType}
+    def set_greeks(self, greeksType: GreeksTypeT) -> Dict[str, Any]:
+        params = {}
+        if greeksType is not None:
+            params["greeksType"] = str(greeksType)
         return self._request_with_params(POST, SET_GREEKS, params)
 
-    def set_isolated_mode(self, isoMode, type):
-        params = {'isoMode': isoMode, 'type': type}
+    def set_isolated_mode(self, isoMode: str, type: str) -> Dict[str, Any]:
+        params = {
+            'isoMode': isoMode,
+            'type': type
+        }
         return self._request_with_params(POST, ISOLATED_MODE, params)
 
-    def max_withdrawal(self, ccy=''):
-        params = {'ccy': ccy}
+    def max_withdrawal(self, ccy: Optional[CcyTypeT] = None) -> Dict[str, Any]:
+        params = {}
+        if ccy is not None:
+            params["ccy"] = str(ccy)
         return self._request_with_params(GET, MAX_WITHDRAWAL, params)
 
-    def borrow_repay(self, ccy='', side='', amt=''):
-        params = {'ccy': ccy, 'side': side, 'amt': amt}
+    def borrow_repay(self, ccy: CcyTypeT, side: Literal["borrow", "repay"], amt: Union[int, float, str], ordId: Optional[str] = None):
+        params = {}
+        if ccy is not None:
+            params["ccy"] = str(ccy)
+        if side is not None:
+            params["side"] = side
+        if amt is not None:
+            params["amt"] = str(amt)
+        if ordId is not None:
+            params["ordId"] = ordId
         return self._request_with_params(POST, BORROW_REPAY, params)
 
-    def get_borrow_repay_history(self, ccy='', after='', before='', limit=''):
-        params = {'ccy': ccy, 'after': after, 'before': before, 'limit': limit}
+    def get_borrow_repay_history(self,
+            ccy: Optional[CcyTypeT]=None,
+            after: Optional[Union[int, str]]=None,
+            before: Optional[Union[int, str]]=None,
+            limit: Optional[Union[int, str]]=None
+        ):
+        params = {}
+        if ccy is not None:
+            params["ccy"] = str(ccy)
+        if after is not None:
+            params["after"] = str(after)
+        if before is not None:
+            params["before"] = str(before)
+        if limit is not None:
+            params["limit"] = str(limit)
         return self._request_with_params(GET, BORROW_REPAY_HISTORY, params)
 
-    def interest_limits(self, type='', ccy=''):
-        params = {'type': type, 'ccy': ccy}
+    def interest_limits(self, type: Optional[int] = None, ccy: Optional[CcyTypeT] = None):
+        params = {}
+        if type is not None:
+            params["type"] = int(type)
+        if ccy is not None:
+            params["ccy"] = str(ccy)
         return self._request_with_params(GET, INTEREST_LIMITS, params)
 
     def simulated_margin(self, instType='', inclRealPos=True, instId='', pos=''):
@@ -334,14 +368,18 @@ class AccountAPI(Client):
                   'instId': instId, 'pos': pos, }
         return self._request_with_params(POST, SIMULATED_MARGIN, params)
 
-    def greeks(self, ccy=''):
-        params = {'ccy': ccy}
+    def greeks(self, ccy: Optional[CcyTypeT] = None) -> Dict[str, Any]:
+        params = {}
+        if ccy is not None:
+            params["ccy"] = str(ccy)
         return self._request_with_params(GET, GREEKS, params)
 
-    def account_position_tiers(self, instType='', uly='', instFamily=''):
-        params = {
-            'instType': instType,
-            'uly': uly,
-            'instFamily': instFamily
-        }
+    def account_position_tiers(self, instType: InstTypeT, uly: Optional[str]=None, instFamily: Optional[str]=None) -> Dict[str, Any]:
+        params = {}
+        if instType is not None:
+            params["instType"] = str(instType)
+        if uly is not None:
+            params["uly"] = str(uly)
+        if instFamily is not None:
+            params["instFamily"] = str(instFamily)
         return self._request_with_params(GET, ACCOUNT_POSITION_TIERS, params)
