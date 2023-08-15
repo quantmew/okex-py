@@ -20,7 +20,7 @@ class Client(object):
         self.api_url = c.API_URL
         self.proxy = None
 
-    def _request(self, method: Literal["GET", "POST", "DELETE"], request_path: str, params: Union[str, dict], cursor=False):
+    def _request(self, method: Literal["GET", "POST", "DELETE"], request_path: str, params: Union[str, dict], cursor: bool=False):
         if method == c.GET:
             request_path = request_path + utils.parse_params_to_str(params)
         # url
@@ -93,7 +93,7 @@ class Client(object):
     def _request_without_params(self, method: str, request_path: str):
         return self._request(method, request_path, {})
 
-    def _request_with_params(self, method: str, request_path: str, params: Union[str, dict], cursor=False):
+    def _request_with_params(self, method: str, request_path: str, params: Union[str, dict], cursor: bool=False):
         return self._request(method, request_path, params, cursor)
 
     def _get_timestamp(self):

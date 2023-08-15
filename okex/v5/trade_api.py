@@ -1,5 +1,5 @@
 
-from typing import Dict, Union, Optional, Iterable
+from typing import Any, Dict, Union, Optional, Iterable
 from enum import Enum
 
 from typeguard import typechecked
@@ -14,6 +14,8 @@ from .objects.posside import PosSide
 from .objects.tdmode import TdMode
 from .objects.ordertype import OrderType
 from .objects.trgccy import TrgCCY
+from .objects.triggerpxtype import TriggerPxType
+from .objects.mgnmode import MgnModeT
 
 @typechecked
 class Order(object):
@@ -40,7 +42,40 @@ class Order(object):
         self.posSide = posSide
         self.reduceOnly = reduceOnly
         self.tgtCcy = tgtCcy
-        
+
+
+@typechecked
+class AmendOrder(object):
+    def __init__(self,
+            instId: str,
+            cxlOnFail: Optional[bool] = False,
+            ordId: Optional[str] = None,
+            clOrdId: Optional[str] = None,
+            reqId: Optional[str] = None,
+            newSz: Optional[Union[float, int, str]] = None,
+            newPx: Optional[Union[float, int, str]] = None,
+            newTpTriggerPx: Optional[Union[float, int, str]] = None,
+            newTpOrdPx: Optional[Union[float, int, str]] = None,
+            newSlTriggerPx: Optional[Union[float, int, str]] = None,
+            newSlOrdPx: Optional[Union[float, int, str]] = None,
+            newTpTriggerPxType: Optional[Union[str, TriggerPxType]] = None,
+            newSlTriggerPxType: Optional[Union[str, TriggerPxType]] = None,
+        ) -> None:
+        super().__init__()
+        self.instId = instId
+        self.cxlOnFail = cxlOnFail
+        self.ordId = ordId
+        self.clOrdId = clOrdId
+        self.reqId = reqId
+        self.newSz = newSz
+        self.newPx = newPx
+        self.newTpTriggerPx = newTpTriggerPx
+        self.newTpOrdPx = newTpOrdPx
+        self.newSlTriggerPx = newSlTriggerPx
+        self.newSlOrdPx = newSlOrdPx
+        self.newTpTriggerPxType = newTpTriggerPxType
+        self.newSlTriggerPxType = newSlTriggerPxType
+
 class CancelOrder(object):
     def __init__(self, instId: str, ordId: Optional[str] = None, clOrdId: Optional[str] = None) -> None:
         super().__init__()
@@ -196,5 +231,125 @@ class TradeAPI(Client):
             params['clOrdId'] = str(clOrdId)
 
         data = self._request_with_params(GET, ORDER, params)["data"]
+
+        return data
+
+    def amend_order(self, instId: str,
+                    cxlOnFail: Optional[bool] = False,
+                    ordId: Optional[str] = None,
+                    clOrdId: Optional[str] = None,
+                    reqId: Optional[str] = None,
+                    newSz: Optional[Union[float, int, str]] = None,
+                    newPx: Optional[Union[float, int, str]] = None,
+                    newTpTriggerPx: Optional[Union[float, int, str]] = None,
+                    newTpOrdPx: Optional[Union[float, int, str]] = None,
+                    newSlTriggerPx: Optional[Union[float, int, str]] = None,
+                    newSlOrdPx: Optional[Union[float, int, str]] = None,
+                    newTpTriggerPxType: Optional[Union[str, TriggerPxType]] = None,
+                    newSlTriggerPxType: Optional[Union[str, TriggerPxType]] = None,
+                ) -> Dict[str, Any]:
+        if ordId is None and clOrdId is None:
+            raise ValueError("Order ID, one of ordId and clOrdId must have a value.")
+        params = {}
+        if instId is not None:
+            params['instId'] = str(instId)
+        if cxlOnFail is not None:
+            params['cxlOnFail'] = cxlOnFail
+        if ordId is not None:
+            params['ordId'] = str(ordId)
+        if clOrdId is not None:
+            params['clOrdId'] = str(clOrdId)
+        if reqId is not None:
+            params['reqId'] = str(reqId)
+        if newSz is not None:
+            params['newSz'] = str(newSz)
+        if newPx is not None:
+            params['newPx'] = str(newPx)
+        if newTpTriggerPx is not None:
+            params['newTpTriggerPx'] = str(newTpTriggerPx)
+        if newTpOrdPx is not None:
+            params['newTpOrdPx'] = str(newTpOrdPx)
+        if newSlTriggerPx is not None:
+            params['newSlTriggerPx'] = str(newSlTriggerPx)
+        if newSlOrdPx is not None:
+            params['newSlOrdPx'] = str(newSlOrdPx)
+        if newTpTriggerPxType is not None:
+            params['newTpTriggerPxType'] = enum_to_str(newTpTriggerPxType)
+        if newSlTriggerPxType is not None:
+            params['newSlTriggerPxType'] = enum_to_str(newSlTriggerPxType)
+
+        data = self._request_with_params(POST, AMEND_ORDER, params)["data"]
+
+        return data
+
+    def amend_batch_orders(self, orders: Union[AmendOrder, Iterable[AmendOrder]]) -> Dict[str, Any]:
+        orders_list = []
+        if isinstance(orders, AmendOrder):
+            orders_list.append(orders)
+        else:
+            orders_list = orders
+        params_total = []
+
+        for order in orders_list:
+            params = dict()
+            if order.ordId is None and order.clOrdId is None:
+                raise ValueError("Order ID, one of ordId and clOrdId must have a value.")
+            if order.instId is not None:
+                params['instId'] = str(order.instId)
+            if order.cxlOnFail is not None:
+                params['cxlOnFail'] = order.cxlOnFail
+            if order.ordId is not None:
+                params['ordId'] = str(order.ordId)
+            if order.clOrdId is not None:
+                params['clOrdId'] = str(order.clOrdId)
+            if order.reqId is not None:
+                params['reqId'] = str(order.reqId)
+            if order.newSz is not None:
+                params['newSz'] = str(order.newSz)
+            if order.newPx is not None:
+                params['newPx'] = str(order.newPx)
+            if order.newTpTriggerPx is not None:
+                params['newTpTriggerPx'] = str(order.newTpTriggerPx)
+            if order.newTpOrdPx is not None:
+                params['newTpOrdPx'] = str(order.newTpOrdPx)
+            if order.newSlTriggerPx is not None:
+                params['newSlTriggerPx'] = str(order.newSlTriggerPx)
+            if order.newSlOrdPx is not None:
+                params['newSlOrdPx'] = str(order.newSlOrdPx)
+            if order.newTpTriggerPxType is not None:
+                params['newTpTriggerPxType'] = enum_to_str(order.newTpTriggerPxType)
+            if order.newSlTriggerPxType is not None:
+                params['newSlTriggerPxType'] = enum_to_str(order.newSlTriggerPxType)
+            params_total.append(params)
+
+        data = self._request_with_params(POST, AMEND_BATCH_ORDERS, params_total)["data"]
+
+        return data
+
+    def close_position(self, instId: str,
+                    mgnMode: MgnModeT,
+                    posSide: Optional[Union[PosSide, str]] = None,
+                    ccy: Optional[str] = None,
+                    autoCxl: Optional[bool] = False,
+                    clOrdId: Optional[str] = None,
+                    tag: Optional[str] = None
+                    ) -> Dict[str, Any]:
+        params = {}
+        if instId is not None:
+            params['instId'] = str(instId)
+        if posSide is not None:
+            params['posSide'] = enum_to_str(posSide)
+        if mgnMode is not None:
+            params['mgnMode'] = enum_to_str(mgnMode)
+        if ccy is not None:
+            params['ccy'] = str(ccy)
+        if autoCxl is not None:
+            params['autoCxl'] = autoCxl
+        if clOrdId is not None:
+            params['clOrdId'] = str(clOrdId)
+        if tag is not None:
+            params['tag'] = str(tag)
+
+        data = self._request_with_params(POST, CLOSE_POSITION, params)["data"]
 
         return data

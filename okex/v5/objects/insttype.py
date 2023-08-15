@@ -10,4 +10,7 @@ class InstType(Enum):
     OPTION = "OPTION"
     ANY = "ANY"
 
+    def __str__(self) -> str:
+        return self.value
+
 InstTypeT: TypeAlias = Union[InstType, str]

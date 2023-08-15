@@ -12,4 +12,7 @@ class CcyType(Enum):
     UNI = "UNI"
     # ...
 
+    def __str__(self) -> str:
+        return self.value
+
 CcyTypeT: TypeAlias = Union[CcyType, str]

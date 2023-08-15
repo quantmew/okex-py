@@ -10,4 +10,7 @@ class MgnMode(Enum):
     # 非保证金模式
     CASH = "cash"
 
+    def __str__(self) -> str:
+        return self.value
+
 MgnModeT: TypeAlias = Union[MgnMode, str]

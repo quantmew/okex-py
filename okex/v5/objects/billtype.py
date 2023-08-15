@@ -14,7 +14,13 @@ class BillType(Enum):
     FORCED_LIQUIDATION = 5
     # ...
 
+    def __str__(self) -> str:
+        return self.value
+
 class BillSubType(Enum):
     LINEAR = "linear"
     INVERSE = "inverse"
     # ...
+
+    def __str__(self) -> str:
+        return self.value

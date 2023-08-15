@@ -5,3 +5,6 @@ class TrgCCY(Enum):
     BASE_CCY = "base_ccy"
     # 计价货币
     QUOTE_CCY = "quote_ccy"
+
+    def __str__(self) -> str:
+        return self.value

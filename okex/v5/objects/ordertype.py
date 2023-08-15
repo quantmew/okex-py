@@ -11,3 +11,6 @@ class OrderType(Enum):
     FOK = "fok"
     # 立即成交并取消剩余
     IOC = "ioc"
+
+    def __str__(self) -> str:
+        return self.value

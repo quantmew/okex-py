@@ -5,3 +5,6 @@ class TdMode(Enum):
     CROSS = "cross"
     # 非保证金模式
     CASH = "cash"
+
+    def __str__(self) -> str:
+        return self.value
