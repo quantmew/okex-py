@@ -252,6 +252,24 @@ class AccountAPI(Client):
         params = {'instId': instId, 'mgnMode': enum_to_str(mgnMode)}
         return self._request_with_params(GET, LEVERAGE_INFO, params)
 
+    def adjust_leverage_info(self, instType: InstTypeT,
+                            mgnMode: MgnModeT,
+                            lever: Union[float, int, str],
+                            instId: Optional[str] = None,
+                            ccy: Optional[CcyTypeT] = None,
+                            posSide: Optional[PosSide] = None):
+        params = {}
+        params["instType"] = str(instType)
+        params["mgnMode"] = enum_to_str(mgnMode)
+        params["lever"] = str(lever)
+        if instId is not None:
+            params["instId"] = str(instId)
+        if ccy is not None:
+            params["ccy"] = enum_to_str(ccy)
+        if posSide is not None:
+            params["posSide"] = enum_to_str(posSide)
+        return self._request_with_params(GET, MAX_LOAN, params)
+
     def max_loan(self, instId: str, mgnMode: MgnModeT, mgnCcy: Optional[CcyTypeT]=None) -> Dict[str, Any]:
         params = {}
         params["instId"] = str(instId)
